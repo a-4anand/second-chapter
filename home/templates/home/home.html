@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Chapter - Buy & Sell Used Books</title>
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+        </div>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#about">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Login</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Welcome to <span>Second Chapter</span></h1>
+            <p>Where every book finds a new story</p>
+            <div class="hero-buttons">
+                <button class="btn-primary">Buy Used Books</button>
+                <button class="btn-secondary">Sell Used Books</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'assets/img/freepik__hand-exchanging-book__65103.png' %}" alt="Person holding a book">
+        </div>
+    </section>
+
+    <div class="book-section">
+        <div class="book-text">
+            <h2>Buy & Sell Used Books at Low Prices – Give Stories a Second Life!</h2>
+            <p>Looking for affordable books or want to declutter your shelf? Second Chapter connects book lovers to buy and sell pre-loved books easily. 
+            Find rare classics, textbooks, and bestsellers at unbeatable prices. Save money, promote sustainability, and share the joy of reading! 
+            Start your next chapter today!</p>
+        </div>
+        <div class="book-image">
+            <img src="{% static 'assets/img/openart-image_gZOSPwo6_1741035907520_raw.jpg' %}" alt="Book with pen">
+    
+
+        </div>
+    </div>
+
+    <div class="shop-category-section">
+        <h2>Shop by category</h2>
+        <div class="category-container">
+            <div class="category-card">
+                <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
+                <h3>ACADEMIC & TEXTBOOKS</h3>
+                <p>Find affordable school, college, and reference books</p>
+            </div>
+            <div class="category-card">
+                <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
+                <h3>FICTION & NOVELS</h3>
+                <p>Explore bestsellers, classics, and contemporary reads.</p>
+            </div>
+            <div class="category-card">
+                <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
+                <h3>RARE & COLLECTIBLES</h3>
+                <p>Discover antique, first editions, and unique finds.</p>
+            </div>
+        </div>
+        <button class="shop-all-btn" id="about">Shop All</button>
+    </div>
+    
+    <section class="about-section" >
+        <div class="about-container">
+            <div class="about-text">
+                <h2>About Second Chapter</h2>
+                <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
+                <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
+                <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
+                <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
+            </div>
+            <div class="about-image">
+                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Second Chapter</h3>
+                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Sell Your Books</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
+                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+                <p>Location: Pune, India</p>
+            </div>
+        </div>
+    
+        <div class="footer-bottom">
+            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    
+</body>
+</html>
