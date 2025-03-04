@@ -6,7 +6,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Second Chapter - Buy & Sell Used Books</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+        .contact-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: #fff;
+            margin: 120px auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
+        .contact-image {
+            width: 50%;
+            margin-top:120px;
+        }
+
+        .contact-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .contact-form {
+            width: 55%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .contact-image, .contact-form {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -22,65 +104,35 @@
         </nav>
     </header>
 
-    <div class="arch_contact_us_duplicate">
-        <div class="responsive-container-block big-container">
-          <div class="responsive-container-block container">
-            <div class="responsive-cell-block wk-mobile-12 wk-desk-5 wk-tab-10 wk-ipadp-5" id="ih6s">
-              <p class="text-blk section-head">
-                Get in touch dolor sit
-              </p>
-              <p class="text-blk section-subhead">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              </p>
-            </div>
-            <div class="responsive-cell-block wk-ipadp-6 wk-mobile-12 wk-desk-5 wk-tab-9" id="i6df">
-              <div class="form-wrapper">
-                <input class="input input-element" name="Name" placeholder="Name">
-                <input class="input input-element" name="Contact Number" placeholder="Contact Number">
-                <input class="input input-element" name="Email" placeholder="Email">
-                <textarea class="textinput input-element" placeholder="Message"></textarea>
-                <button class="button">
-                  Send
-                </button>
-              </div>
-              <div class="social-media-icon-container">
-                <div class="icon-block social-icon">
-                  <svg height="37.7" id="ihxs6" viewBox="0 0 37.701 37.7" width="37.701" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M32.178,0H5.523A5.529,5.529,0,0,0,0,5.522V32.178A5.529,5.529,0,0,0,5.523,37.7H16.641V24.372H12.223V17.746h4.418V13.254a6.634,6.634,0,0,1,6.627-6.627h6.7v6.627h-6.7v4.492h6.7l-1.1,6.627h-5.6V37.7h8.91A5.529,5.529,0,0,0,37.7,32.178V5.522A5.529,5.529,0,0,0,32.178,0Zm0,0">
-                    </path>
-                  </svg>
-                </div>
-                <div class="icon-block social-icon">
-                  <svg height="37.7" id="inclm" viewBox="0 0 37.701 37.7" width="37.701" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M37.587,11.078A13.839,13.839,0,0,0,36.711,6.5a9.238,9.238,0,0,0-2.174-3.339A9.241,9.241,0,0,0,31.2.989,13.837,13.837,0,0,0,26.622.114C24.612.022,23.969,0,18.85,0s-5.762.022-7.772.113A13.841,13.841,0,0,0,6.5.99,9.239,9.239,0,0,0,3.164,3.164,9.24,9.24,0,0,0,.989,6.5a13.838,13.838,0,0,0-.875,4.576C.022,13.088,0,13.73,0,18.85s.022,5.762.114,7.772A13.835,13.835,0,0,0,.99,31.2a9.237,9.237,0,0,0,2.174,3.339A9.236,9.236,0,0,0,6.5,36.71a13.832,13.832,0,0,0,4.576.876c2.011.092,2.653.113,7.772.113s5.762-.022,7.772-.113A13.834,13.834,0,0,0,31.2,36.71,9.637,9.637,0,0,0,36.711,31.2a13.834,13.834,0,0,0,.876-4.576c.091-2.011.113-2.653.113-7.772s-.022-5.761-.113-7.772ZM34.194,26.467a10.429,10.429,0,0,1-.649,3.5,6.242,6.242,0,0,1-3.578,3.578,10.43,10.43,0,0,1-3.5.649c-1.987.091-2.584.11-7.617.11s-5.63-.019-7.617-.11a10.433,10.433,0,0,1-3.5-.649,5.842,5.842,0,0,1-2.167-1.41,5.839,5.839,0,0,1-1.41-2.167,10.429,10.429,0,0,1-.649-3.5c-.091-1.988-.11-2.584-.11-7.617s.019-5.629.11-7.617a10.437,10.437,0,0,1,.649-3.5,5.844,5.844,0,0,1,1.41-2.168,5.836,5.836,0,0,1,2.168-1.41,10.428,10.428,0,0,1,3.5-.649c1.988-.091,2.584-.11,7.617-.11h0c5.033,0,5.63.019,7.617.11a10.431,10.431,0,0,1,3.5.649,5.845,5.845,0,0,1,2.167,1.41,5.836,5.836,0,0,1,1.41,2.168,10.42,10.42,0,0,1,.649,3.5c.091,1.988.11,2.584.11,7.617S34.285,24.479,34.194,26.467Zm0,0" transform="translate(0 0)">
-                    </path>
-                    <path d="M134.219,124.539a9.68,9.68,0,1,0,9.68,9.68A9.68,9.68,0,0,0,134.219,124.539Zm0,15.963a6.283,6.283,0,1,1,6.284-6.284A6.283,6.283,0,0,1,134.219,140.5Zm0,0" transform="translate(-115.369 -115.369)">
-                    </path>
-                    <path d="M366.454,90.888a2.262,2.262,0,1,1-2.262-2.262A2.262,2.262,0,0,1,366.454,90.888Zm0,0" transform="translate(-335.279 -82.1)">
-                    </path>
-                  </svg>
-                </div>
-                <div class="icon-block social-icon">
-                  <svg height="33.932" id="ijipc" viewBox="0 0 41.754 33.932" width="41.754" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M66.857,38.045a17.092,17.092,0,0,1-4.92,1.347A8.589,8.589,0,0,0,65.7,34.654a17.149,17.149,0,0,1-5.44,2.078,8.573,8.573,0,0,0-14.6,7.814A24.317,24.317,0,0,1,28.009,35.6,8.575,8.575,0,0,0,30.66,47.032a8.506,8.506,0,0,1-3.88-1.073c0,.036,0,.073,0,.109a8.571,8.571,0,0,0,6.872,8.4,8.6,8.6,0,0,1-3.868.148,8.575,8.575,0,0,0,8,5.949A17.293,17.293,0,0,1,25.1,64.111a24.231,24.231,0,0,0,13.13,3.849c15.756,0,24.373-13.053,24.373-24.373,0-.371-.008-.741-.025-1.108a17.371,17.371,0,0,0,4.275-4.434Z" transform="translate(-25.103 -34.028)">
-                    </path>
-                  </svg>
-                </div>
-                <div class="icon-block social-icon">
-                  <svg height="37.649" id="ij4qf" viewBox="0 0 39.398 37.649" width="39.398" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M66.466,47.05V61.618H58.02V48.026c0-3.413-1.219-5.743-4.278-5.743a4.62,4.62,0,0,0-4.332,3.088,5.781,5.781,0,0,0-.28,2.058V61.617H40.684s.113-23.02,0-25.4h8.447v3.6c-.017.028-.041.056-.056.083h.056v-.083a8.386,8.386,0,0,1,7.612-4.2c5.557,0,9.723,3.631,9.723,11.432ZM31.848,23.969c-2.889,0-4.78,1.9-4.78,4.388a4.374,4.374,0,0,0,4.669,4.39h.055c2.946,0,4.778-1.951,4.778-4.39a4.388,4.388,0,0,0-4.722-4.388ZM27.57,61.618h8.444v-25.4H27.57Z" transform="translate(-27.068 -23.969)">
-                    </path>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="contact-container">
+        <div class="contact-image">
+            <img src="{% static 'assets/img/Untitled design.png' %}" alt="Contact Us">
         </div>
-      </div>
-
-    
-
-    
+        <div class="contact-form">
+            <h2>Contact Us</h2>
+            <p>We’d love to hear from you! Fill out the form below and we’ll get back to you as soon as possible.</p>
+            <form action="{% url 'contact_admin' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" placeholder="Type your message here..." rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
 
     <div class="shop-category-section">
         <h2>Shop by category</h2>
@@ -103,7 +155,21 @@
         </div>
         <button class="shop-all-btn" id="about">Shop All</button>
     </div>
-    
+
+    <section class="about-section" >
+        <div class="about-container">
+            <div class="about-text">
+                <h2>About Second Chapter</h2>
+                <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
+                <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
+                <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
+                <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
+            </div>
+            <div class="about-image">
+                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+            </div>
+        </div>
+    </section>
     
     <footer class="footer">
         <div class="footer-container">
@@ -135,7 +201,23 @@
             <p>&copy; 2024 Second Chapter. All rights reserved.</p>
         </div>
     </footer>
-    
-    
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.createElement("div");
+    
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+        menuToggle.classList.add("menu-toggle");
+    
+        nav.parentNode.insertBefore(menuToggle, nav);
+    
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+            menuToggle.classList.toggle("open");
+        });
+    });
+    
+</script>
 </html>

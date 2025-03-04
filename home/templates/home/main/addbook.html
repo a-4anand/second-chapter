@@ -25,22 +25,23 @@
 
 <div class="container">
     <header>Book Appointment for Book collection</header>
-    <form action="#">
+    <form action="{% url 'book_appointment' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="form first">
             <div class="details personal">
                 <span class="title">Personal and Book's Details</span>
                 <div class="fields">
                     <div class="input-field">
                         <label>Full Name</label>
-                        <input type="text" placeholder="Enter your name" required>
+                        <input type="text" name="full_name" placeholder="Enter your name" required>
                     </div>
                     <div class="input-field">
                         <label>Choose a suitable Pickup date</label>
-                        <input type="date" placeholder="Enter birth date" required>
+                        <input type="date" name="pickup_date" placeholder="Enter birth date" required>
                     </div>
                     <div class="input-field">
                         <label>Choose a time slot</label>
-                    <select required>
+                    <select name="time_slot" required>
                         <option disabled selected>Select a slot</option>
                         <option>6 PM - 7 PM</option>
                         <option>7 PM - 8 PM</option>
@@ -49,11 +50,11 @@
                     </div>
                     <div class="input-field">
                         <label>Mobile Number</label>
-                        <input type="number" placeholder="Enter mobile number" required>
+                        <input type="number" name="mobile_number" placeholder="Enter mobile number" required>
                     </div>
                     <div class="input-field">
                         <label>Book condition.</label>
-                        <select required>
+                        <select  name="book_condition" required>
                             <option disabled selected>Select the condition of the book. </option>
                             <option>Like new</option>
                             <option>Slightly used </option>
@@ -62,7 +63,7 @@
                     </div>
                     <div class="input-field">
                         <label>Quantity</label>
-                        <input type="number" placeholder="Enter the quantity of the books" required>
+                        <input type="number" name="quantity" placeholder="Enter the quantity of the books" required>
                     </div>
                 </div>
             </div>
@@ -71,11 +72,11 @@
                 <div class="fields">
                     <div class="input-field">
                         <label>Address</label>
-                        <input type="text" placeholder="Enter the Address" required>
+                        <input type="text" name="address" placeholder="Enter the Address" required>
                     </div>
                     <div class="input-field">
                         <label>Book Category.</label>
-                        <select required>
+                        <select name="book_category" required>
                             <option disabled selected>Select the condition of the book. </option>
                             <option>Academic & TEXTBOOKS</option>
                             <option> Fiction & Novels</option>
@@ -84,19 +85,19 @@
                     </div>
                     <div class="input-field">
                         <label>Expected Total amount</label>
-                        <input type="text" placeholder="Optional" >
+                        <input type="text" name="expected_amount" placeholder="Optional" >
                     </div>
                     <div class="input-field">
                         <label>City</label>
-                        <input type="number" placeholder="Enter the city" required>
+                        <input type="text" name="city" placeholder="Enter the city" required>
                     </div>
                     <div class="input-field">
                         <label>Upload Photo </label>
-                        <input type="file" accept="image/*">
+                        <input type="file" name="photo" accept="image/*">
                     </div>
                     <div class="input-field">
                         <label>Additional Comments</label>
-                        <input type="text" placeholder="Any Comment" >
+                        <input type="text" name="additional_comments" placeholder="Any Comment" >
                     </div>
                 </div>
                 <button class="submit" type="submit">
@@ -173,5 +174,22 @@ allInput.forEach(input => {
 })
 })
 backBtn.addEventListener("click", () => form.classList.remove('secActive'));
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.createElement("div");
+    
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+        menuToggle.classList.add("menu-toggle");
+    
+        nav.parentNode.insertBefore(menuToggle, nav);
+    
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+            menuToggle.classList.toggle("open");
+        });
+    });
+    
 </script>
 </html>
