@@ -6,6 +6,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Second Chapter - Buy & Sell Used Books</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+       
+
+
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            padding: 25px;
+           
+        }
+        
+        .book-card {
+            {% comment %} background: linear-gradient(135deg, #fff8e1, #e1c699); {% endcomment %}
+            background:white;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            width: 350px; /* Reduced width */
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            font-size: 14px; /* Slightly smaller font */
+        }
+        
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .book-card img {
+            width: 100%;
+            height: 420px; /* Adjusted height */
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .book-card h3 {
+            margin: 8px 0;
+            font-size: 16px; /* Reduced size */
+        }
+        
+        .book-card p {
+            margin: 4px 0;
+            font-size: 13px;
+        }
+        
+        .out-of-stock {
+            color: red;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        
+        .buy-now, .add-to-cart {
+            background-color: #a87f3a;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 3px;
+        }
+        .buy-now {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .buy-now:hover {
+            background-color: #219150;
+        }
+
+        .add-to-cart {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .add-to-cart:hover {
+            background-color: #2980b9;
+        }
+
+        
+        .book-description {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .discount{
+            color:rgb(255, 38, 0);
+            font-weight:bold;
+            font-size:2.5vh;
+
+        }
+        
+        .see-more {
+            background-color:rgb(30, 106, 43);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 3px;
+        }
+        
+        .see-more:hover {
+            background-color:rgb(11, 183, 20);
+        }
+    </style>
 
 </head>
 <body>
@@ -15,74 +128,146 @@
         </div>
 
         <nav>
-            <a href="#">Home</a>
+            <a href="{% url 'buybooks' %}" style="text-decoration: none;">⬅ Back</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'buybooks' %}">Buy Books</a>
+            <a href="{% url 'sellbooks' %}">Sell Books</a>
             <a href="#about">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Login</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="#">View Profile</a>
+            <a href="#">Your Orders</a>
+            <a href="#">Settings</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </nav>
+        
+        
+        
+        
     </header>
 
-    
+<h2 style="text-align: center; padding: 20px;">Books Available</h2>
 
-    
+<div class="book-container">
+    {% for book in books %}
+    <div class="book-card">
+        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
+        <h3>{{ book.title }}</h3>
+        <p><del>MRP: ₹{{ book.mrp }}</del></p>
+        <p><strong>Discounted Price: ₹{{ book.discounted_price }}</strong></p>
+        <p style="text-align: center; color:red ;font-size:25px;">{{ book.discount_percentage }}% off</p>
+        
+        <div class="extra-details" style="display: none;">
+            {% if book.author %}
+                <p><strong>Author:</strong> {{ book.author }}</p>
+            {% endif %}
+            {% if book.is_in_stock %}
+            <button class="buy-now">Buy Now</button>
+            {% else %}
+            <p class="out-of-stock">Out of Stock</p>
+            <button class="buy-now" disabled>Buy Now</button>
+            <button class="add-to-cart" disabled>Add to Cart</button>
+        {% endif %}
+           
+            <p><strong>Category:</strong> {{ book.category }}</p>
+            <p><strong>Condition:</strong> {{ book.condition }}</p>
+            <p><strong>{{ book.description|default:"No description available" }}</strong></p>
 
-    <div class="shop-category-section">
-        <h2>Shop by category</h2>
-        <div class="category-container">
-            <div class="category-card">
-                <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
-                <h3>ACADEMIC & TEXTBOOKS</h3>
-                <p>Find affordable school, college, and reference books</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
-                <h3>FICTION & NOVELS</h3>
-                <p>Explore bestsellers, classics, and contemporary reads.</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-                <h3>RARE & COLLECTIBLES</h3>
-                <p>Discover antique, first editions, and unique finds.</p>
-            </div>
         </div>
-        <button class="shop-all-btn" id="about">Shop All</button>
+        
+        <button class="see-more" onclick="toggleDetails(this)">See More</button>
+
+        {% if book.is_in_stock %}
+          
+            <a href="{% url 'OrderItem' book.id %}" class="add-to-cart">Add to Cart</a>
+        {% else %}
+            <p class="out-of-stock">Out of Stock</p>
+            <button class="buy-now" disabled>Buy Now</button>
+            <button class="add-to-cart" disabled>Add to Cart</button>
+        {% endif %}
     </div>
-    
-    
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-about">
-                <h3>Second Chapter</h3>
-                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
-            </div>
-            
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Sell Your Books</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
-                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-                <p>Location: Pune, India</p>
-            </div>
+    {% endfor %}
+</div>
+<div class="shop-category-section">
+    <h2>Shop by category</h2>
+    <div class="category-container">
+        <div class="category-card">
+            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
+            <h3>ACADEMIC & TEXTBOOKS</h3>
+            <p>Find affordable school, college, and reference books</p>
         </div>
-    
-        <div class="footer-bottom">
-            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
+        <div class="category-card">
+            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
+            <h3>FICTION & NOVELS</h3>
+            <p>Explore bestsellers, classics, and contemporary reads.</p>
         </div>
-    </footer>
-    
-    
-</body>
+        <div class="category-card">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
+            <h3>RARE & COLLECTIBLES</h3>
+            <p>Discover antique, first editions, and unique finds.</p>
+        </div>
+    </div>
+</div>
+
+<section class="about-section" >
+    <div class="about-container">
+        <div class="about-text">
+            <h2>About Second Chapter</h2>
+            <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
+            <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
+            <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
+            <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
+        </div>
+        <div class="about-image">
+            <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-about">
+            <h3>Second Chapter</h3>
+            <p>We buy and sell used books at affordable prices, making reading accessible to everyone.</p>
+        </div>
+        
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                <li><a href="#">View Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+            
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Second Chapter. All rights reserved.</p>
+    </div>
+</footer>
+
 <script>
+    document.querySelectorAll(".add-to-cart").forEach(button => {
+        button.addEventListener("click", function() {
+            alert("Book added to cart!");
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         const nav = document.querySelector("nav");
         const menuToggle = document.createElement("div");
@@ -97,6 +282,32 @@
             menuToggle.classList.toggle("open");
         });
     });
+
+    function toggleDescription(button) {
+        let description = button.previousElementSibling;
+        if (description.style.display === "none" || description.style.display === "") {
+            description.style.display = "block";
+            button.textContent = "See Less";
+        } else {
+            description.style.display = "none";
+            button.textContent = "See More";
+        }
+    }
+
     
 </script>
+<script>
+    function toggleDetails(button) {
+        var details = button.parentElement.querySelector(".extra-details");
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+            button.textContent = "See Less";
+        } else {
+            details.style.display = "none";
+            button.textContent = "See More";
+        }
+    }
+    </script>
+    
+</body>
 </html>

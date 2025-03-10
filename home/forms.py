@@ -12,3 +12,6 @@ class ContactAdminForm(forms.ModelForm):
     class Meta:
         model = ContactAdmin  
         fields = '__all__'  
+
+
+        

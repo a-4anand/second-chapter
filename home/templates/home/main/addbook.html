@@ -15,11 +15,32 @@
         </div>
 
         <nav>
-            <a href=" ">Home</a>
+            <a href="{% url 'sellbooks' %}" style="text-decoration: none;">⬅ Back</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'buybooks' %}">Buy Books</a>
+            <a href="{% url 'sellbooks' %}">Sell Books</a>
             <a href="#about">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Login</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="#">View Profile</a>
+            <a href="#">Your Orders</a>
+            <a href="#">Settings</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </nav>
+        
+        
+        
+        
     </header>
 </div>
 
@@ -68,7 +89,7 @@
                 </div>
             </div>
             <div class="details ID">
-                <span class="title">Other Details</span>
+                
                 <div class="fields">
                     <div class="input-field">
                         <label>Address</label>
@@ -80,6 +101,7 @@
                             <option disabled selected>Select the condition of the book. </option>
                             <option>Academic & TEXTBOOKS</option>
                             <option> Fiction & Novels</option>
+                            <option> Personal Development </option>
                             <option>Rare & Collectibles</option>
                         </select>
                     </div>
@@ -99,6 +121,7 @@
                         <label>Additional Comments</label>
                         <input type="text" name="additional_comments" placeholder="Any Comment" >
                     </div>
+                    <span class="title2">Book Pickup Service is Currently available in Pune City Only</span>
                 </div>
                 <button class="submit" type="submit">
                     <span class="btnText">Submit</span>
@@ -136,12 +159,16 @@
             <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Sell Your Books</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="#">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
                 </ul>
+                
             </div>
             
             <div class="footer-contact">

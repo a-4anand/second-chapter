@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Second Chapter - Buy & Sell Used BooksSecond Chapter - Buy & Sell Used Books{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+    /* Profile Container */
+.profile-container {
+    max-width: 600px;
+    margin: 50px auto;
+    margin-top: 120px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Profile Header */
+.profile-header {
+    margin-bottom: 20px;
+}
+
+.profile-avatar img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #ff5733;
+    object-fit: cover;
+}
+
+.profile-username {
+    font-size: 2rem;
+    color: #333;
+    margin: 10px 0 5px;
+}
+
+.profile-bio {
+    font-size: 1rem;
+    color: #777;
+    margin: 0;
+}
+
+/* Profile Details */
+.profile-details {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.detail-item {
+    margin: 15px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.detail-value {
+    color: #333;
+}
+
+/* Profile Actions */
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.edit-profile {
+    background: #ff5733;
+    color: #fff;
+}
+
+.change-password {
+    background: #333;
+    color: #fff;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .profile-container {
+        margin: 20px;
+        padding: 15px;
+    }
+
+    .profile-username {
+        font-size: 1.5rem;
+    }
+
+    .profile-bio {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+</style>
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+        </div>
+        <nav>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'buybooks' %}">Buy Books</a>
+            <a href="{% url 'sellbooks' %}">Sell Books</a>
+            <a href="#about">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="#">View Profile</a>
+            <a href="#">Your Orders</a>
+            <a href="#">Settings</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+        
+        
+        
+        
+    </header>
+</div>
+
+<div class="container-fluid">
+    
+</div>
+
+<div class="profile-container">
+       {% if user.is_authenticated %}
+    <div class="profile-header">
+        <div class="profile-avatar">
+          
+
+    
+        </div>
+        <h1 class="profile-username">{{user.username}}</h1>
+        <p class="profile-bio">Book Lover | Avid Reader | Always Exploring New Stories</p>
+    </div>
+
+    <div class="profile-details">
+        
+        <div class="detail-item">
+            <span class="detail-label">Member Since :</span>
+            <span class="detail-value">{{user.date_joined}}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Last_login:</span>
+            <span class="detail-value">{{user.last_login}}</span>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <button class="btn edit-profile" onclick="window.location.href='{% url 'logout' %}'">
+            Log out
+        </button>
+        <button class="btn change-password" onclick="window.location.href='{% url 'password_reset' %}'">
+            Change Password
+        </button>
+        
+    </div>
+    {% endif %}
+</div>
+  
+
+
+
+
+<section class="about-section" >
+        <div class="about-container">
+            <div class="about-text">
+                <h2>About Second Chapter</h2>
+                <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
+                <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
+                <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
+                <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
+            </div>
+            <div class="about-image">
+                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+            </div>
+        </div>
+</section>
+    
+    
+<footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Second Chapter</h3>
+                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="#">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+                
+            </div>
+            
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
+                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+                <p>Location: Pune, India</p>
+            </div>
+        </div>
+    
+        <div class="footer-bottom">
+            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
+        </div>
+</footer>
+    
+    
+</body>
+<script>
+    const form = document.querySelector("form"),
+    nextBtn = form.querySelector(".nextBtn"),
+    backBtn = form.querySelector(".backBtn"),
+    allInput = form.querySelectorAll(".first input");
+nextBtn.addEventListener("click", ()=> {
+allInput.forEach(input => {
+    if(input.value != ""){
+        form.classList.add('secActive');
+    }else{
+        form.classList.remove('secActive');
+    }
+})
+})
+backBtn.addEventListener("click", () => form.classList.remove('secActive'));
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.createElement("div");
+    
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+        menuToggle.classList.add("menu-toggle");
+    
+        nav.parentNode.insertBefore(menuToggle, nav);
+    
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+            menuToggle.classList.toggle("open");
+        });
+    });
+    
+    function toggleMenu() {
+        document.querySelector('.menu-container').classList.toggle('active');
+    }
+</script>
+</html>

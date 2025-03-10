@@ -9,25 +9,50 @@
 
 </head>
 <body>
+
     <header>
         <div class="logo">
             <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
         </div>
 
         <nav>
-            <a href="#">Home</a>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'buybooks' %}">Buy Books</a>
+            <a href="{% url 'sellbooks' %}">Sell Books</a>
             <a href="#about">About</a>
-            <a href="contact">Contact</a>
-            <a href="#">Login</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        
+            <div class="nav-divider"></div>
+        
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Orders</a>
+            <a href="#">Settings</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </nav>
+        
+        
+        
     </header>
+    
 
     <section class="hero">
         <div class="hero-text">
             <h1>Welcome to <span>Second Chapter</span></h1>
             <p>Where every book finds a new story</p>
             <div class="hero-buttons">
-                <button class="btn-primary">Buy Used Books</button>
+                <a href="buybooks">
+                    <button class="btn-primary">Buy Used Books</button>
+                </a>
+               
                 <a href="sellbooks">
                     <button class="btn-secondary">Sell Used Books</button>
                 </a>
@@ -98,12 +123,17 @@
             <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Sell Your Books</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="{% url 'profile' %}">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
+                    
                 </ul>
+                
             </div>
             
             <div class="footer-contact">
@@ -121,7 +151,18 @@
     
     
 </body>
+
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.querySelector(".menu-toggle");
+    
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+        });
+    });
+    
     document.addEventListener("DOMContentLoaded", function () {
         const nav = document.querySelector("nav");
         const menuToggle = document.createElement("div");
@@ -136,5 +177,12 @@
             menuToggle.classList.toggle("open");
         });
     });
+
+
+    function toggleMenu() {
+        document.querySelector('.menu-container').classList.toggle('active');
+    }
+
+    
 </script>
 </html>

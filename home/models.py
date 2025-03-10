@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
 
 from django.db import models
@@ -34,3 +34,31 @@ class ContactAdmin(models.Model):
         return self.name
     
 
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255, blank=True, null=True)
+    category = models.CharField(max_length=100)
+    condition = models.CharField(max_length=100)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+    discounted_price = models.DecimalField(max_digits=10, decimal_places=2)
+    @property
+    def discount_percentage(self):
+        if self.mrp > 0:
+            return round(((self.mrp - self.discounted_price) / self.mrp) * 100, 2)
+        return 0
+
+    description = models.TextField()
+    cover_image = models.ImageField(upload_to='book_covers/')
+    is_in_stock = models.BooleanField(default=True)  # New field for stock status
+
+    def __str__(self):
+        return self.title
+
+
+class OrderItem(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
+    item = models.ForeignKey(Book, on_delete=models.CASCADE)
