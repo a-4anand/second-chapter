@@ -125,8 +125,6 @@
             <tr>
                 <th>Book</th>
                 <th>Price</th>
-                <th>Quantity</th>
-                <th>Total</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -135,8 +133,6 @@
             <tr>
                 <td>{{ item.item.title }}</td>
                 <td>₹{{ item.item.discounted_price }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>₹{{ item.total_price|floatformat:2 }}</td>
                 <td><a href="{% url 'remove-from-cart' item.id %}" class="btn btn-danger">Remove</a></td>
             </tr>
             {% empty %}

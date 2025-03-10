@@ -143,41 +143,37 @@ def contact(request):
 
 def buybooks(request):
     books = Book.objects.all()
-    return render(request, "home/main/buybook.html", {'books': books})
+    cart_items = OrderItem.objects.filter(user=request.user, ordered=False).values_list('item_id', flat=True)
+    context = {
+        'books': books,
+        'cart_items': cart_items
+    }
+
+    return render(request, "home/main/buybook.html", context)
 
 
 @login_required(login_url='/login/')
 def add_to_cart(request, id):
-    item = get_object_or_404(Book, id=id)
-    cart = request.session.get('cart', {})
-    cart[id] = cart.get(id, 0) + 1
-    request.session['cart'] = cart
+    book = get_object_or_404(Book, id=id)
 
-    if not item.is_in_stock:
-        messages.error(request, "Sorry, this book is currently out of stock.")
-        return redirect("buybooks")
+    # Check if the item is already in the cart
+    existing_order_item = OrderItem.objects.filter(user=request.user, item=book, ordered=False).first()
 
-    order_item, created = OrderItem.objects.get_or_create(
-        item=item,
-        user=request.user,
-        ordered=False
-    )
-    cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
-    total_price = sum(item.item.discounted_price for item in cart_items) + 50
-  
-    context = {
-        'cart_items': cart_items,
-        'total_price': total_price
-    }
-
-    if not created:
-    
-        messages.info(request, "This item quantity was updated.")
+    if existing_order_item:
+        messages.warning(request, "This item is already in your cart.")
     else:
-        messages.info(request, "This item was added to your cart.")
+        # Add item to cart
+        order_item = OrderItem.objects.create(
+            user=request.user,
+            item=book,
+            ordered=False
+        )
+        # Mark book as out of stock
+        book.is_in_stock = False
+        book.save()
+        messages.success(request, f"{book.title} added to cart!")
 
-    return render(request, "home/main/cart.html", context)
-
+    return redirect("cart") 
 
 @login_required(login_url='/login/')
 def cart_view(request):
@@ -195,8 +191,10 @@ def cart_view(request):
 @login_required(login_url='/login/')
 def remove_from_cart(request, item_id):
     order_item = get_object_or_404(OrderItem, id=item_id, user=request.user, ordered=False)
-
-    
+    item = order_item.item 
+    order_item.delete()
+    item.is_in_stock = True
+    item.save()
 
     cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
     total_price = sum(item.item.discounted_price for item in cart_items) + 50
@@ -206,7 +204,8 @@ def remove_from_cart(request, item_id):
         'total_price': total_price
     }
 
-    return render(request, "home/main/cart.html", context)
+    return redirect("cart")
+
 
 def book_appointment(request):
     if request.method == "POST":

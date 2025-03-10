@@ -171,33 +171,28 @@
             {% if book.author %}
                 <p><strong>Author:</strong> {{ book.author }}</p>
             {% endif %}
-            {% if book.is_in_stock %}
-            <button class="buy-now">Buy Now</button>
-            {% else %}
-            <p class="out-of-stock">Out of Stock</p>
-            <button class="buy-now" disabled>Buy Now</button>
-            <button class="add-to-cart" disabled>Add to Cart</button>
-        {% endif %}
-           
+            
             <p><strong>Category:</strong> {{ book.category }}</p>
             <p><strong>Condition:</strong> {{ book.condition }}</p>
             <p><strong>{{ book.description|default:"No description available" }}</strong></p>
-
         </div>
-        
+
         <button class="see-more" onclick="toggleDetails(this)">See More</button>
 
         {% if book.is_in_stock %}
+        <a href="{% url 'OrderItem' book.id %}" class="add-to-cart">Add to Cart</a>
+            <a href="#" class="buy-now">Buy Now</a>
           
-            <a href="{% url 'OrderItem' book.id %}" class="add-to-cart">Add to Cart</a>
         {% else %}
             <p class="out-of-stock">Out of Stock</p>
-            <button class="buy-now" disabled>Buy Now</button>
-            <button class="add-to-cart" disabled>Add to Cart</button>
+           
         {% endif %}
     </div>
     {% endfor %}
 </div>
+
+
+
 <div class="shop-category-section">
     <h2>Shop by category</h2>
     <div class="category-container">
