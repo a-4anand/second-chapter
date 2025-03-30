@@ -128,7 +128,7 @@
         </div>
 
         <nav>
-            <a href="{% url 'buybooks' %}" style="text-decoration: none;">⬅ Back</a>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
         
             <div class="nav-divider"></div>
         
@@ -145,20 +145,20 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
         
         
         
-        
     </header>
 
-<h2 style="text-align: center; padding: 20px;">Books Available</h2>
+<h2 style="text-align: center; padding: 20px; margin-top: 120px;">Books Available</h2>
 
 <div class="book-container">
+
     {% for book in books %}
     <div class="book-card">
         <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
@@ -197,19 +197,22 @@
     <h2>Shop by category</h2>
     <div class="category-container">
         <div class="category-card">
+            <a href="{% url 'academic' %}" class="category-link">
             <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
             <h3>ACADEMIC & TEXTBOOKS</h3>
-            <p>Find affordable school, college, and reference books</p>
+                <p>Find affordable school, college, and reference books</p></a>
         </div>
         <div class="category-card">
+             <a href="{% url 'novels' %}" class="category-link">
             <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
             <h3>FICTION & NOVELS</h3>
-            <p>Explore bestsellers, classics, and contemporary reads.</p>
+                 <p>Explore bestsellers, classics, and contemporary reads.</p></a>
         </div>
         <div class="category-card">
+            <a href="{% url 'personaldevelopment' %}" class="category-link">
             <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-            <h3>RARE & COLLECTIBLES</h3>
-            <p>Discover antique, first editions, and unique finds.</p>
+            <h3>Personal Developments</h3>
+                <p>Develop Your Personal Growth with Personal Development Books.</p></a>
         </div>
     </div>
 </div>
@@ -230,30 +233,38 @@
 </section>
 
 <footer class="footer">
-    <div class="footer-container">
-        <div class="footer-about">
-            <h3>Second Chapter</h3>
-            <p>We buy and sell used books at affordable prices, making reading accessible to everyone.</p>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Second Chapter</h3>
+                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="#">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
+                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+                <p>Location: Pune, India</p>
+            </div>
         </div>
-        
-        <div class="footer-links">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="{% url 'contact' %}">Contact</a></li>
-                <li><a href="#">View Profile</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
-            
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <p>&copy; 2024 Second Chapter. All rights reserved.</p>
-    </div>
 </footer>
 
 <script>

@@ -8,93 +8,83 @@
     
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <style>
-       
-
-        .container {
-            max-width: 150px;
-            padding: 50px 30px;
-            background-color: #ffffff;
+        /* Centered container */
+        .otp-container {
+            max-width: 380px; /* Reduced width */
+            width: 80%;
+            padding: 20px; /* Reduced padding */
+            background-color: #fff;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin-top: 80px;
-            margin-bottom: 80px;
-        }
-
-        .container h3 {
+            border-radius: 12px;
+            margin: 80px auto; /* Adjusted margin */
             text-align: center;
+            margin-top: 150px;
+        }
+        
+        .otp-container h3 {
             color: #333;
+            font-size: 18px; /* Slightly smaller font */
             font-weight: 600;
+            margin-bottom: 10px; /* Reduced margin */
         }
-
-        .form-group label {
-            font-weight: 500;
-            color: #555;
+        
+        .form-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px; /* Adjusted spacing */
         }
-
-        .form-control {
-            border-radius: 25px;
-            height: 45px;
-            font-size: 16px;
-            box-shadow: none;
+        
+        /* OTP Input Fields */
+        .otp-input {
+            width: 35px; /* Reduced width */
+            height: 40px; /* Reduced height */
+            margin: 0 3px; /* Less spacing */
+            font-size: 18px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.3s ease-in-out;
         }
-
+        
+        .otp-input:focus {
+            border-color: #007bff;
+        }
+        
+        /* Button Styles */
         .btn-dark {
             background-color: #1a1a1a;
             color: white;
             width: 100%;
-            border-radius: 25px;
-            padding: 10px;
-            font-size: 16px;
-            margin-top: 20px;
+            border-radius: 8px;
+            padding: 10px; /* Slightly smaller padding */
+            font-size: 14px; /* Reduced font size */
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
         }
-
+        
         .btn-dark:hover {
             background-color: #333;
         }
-
-        .btn-register {
-            background-color: #007bff;
-            color: white;
-            border-radius: 25px;
-            padding: 10px;
-            font-size: 16px;
-            width: 100%;
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .btn-register:hover {
-            background-color: #0056b3;
-        }
-
-        .alert {
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
+        
         .text-muted {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 10px; /* Adjusted spacing */
+            font-size: 12px; /* Slightly smaller text */
+            color: #666;
         }
-
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 12px;
-            color: linear-gradient(to right, rgba(63, 9, 178), rgba(0, 0, 0));
-        }
-
-        .footer a {
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .otp-container {
+                width: 75%;
+                padding: 15px;
+            }
+            .otp-input {
+                width: 30px;
+                height: 35px;
+                font-size: 16px;
+            }
         }
     </style>
 
@@ -104,6 +94,7 @@
         <div class="logo">
             <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
         </div>
+
         <nav>
             <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
         
@@ -122,18 +113,16 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
         
         
         
-        
     </header>
-</div>
-<div class="container">
+<div class="otp-container">
     <h3>Verify OTP</h3>
 
     {% if error %}

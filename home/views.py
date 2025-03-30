@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import AppointmentForm, ContactAdminForm
-from .models import Appointment, ContactAdmin, Book, OrderItem
+from .models import Appointment, ContactAdmin, Book, OrderItem, Address
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -62,13 +62,13 @@ def otp_verify_view(request):
         stored_otp = request.session.get('otp')
 
         if not otp_entered:
-            return render(request, 'pricepredict/main/otp-verify.html', {
+            return render(request, 'home/password/otp-verify.html', {
                 "error": "OTP is required"
             })
 
         # Validate OTP
         if otp_entered != str(stored_otp):
-            return render(request, 'pricepredict/main/otp-verify.html', {
+            return render(request, 'home/pasword/otp-verify.html', {
                 "error": "Invalid OTP. Please try again."
             })
 
@@ -117,7 +117,7 @@ def user_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, "Login successful!")
-            return render(request, 'home/home.html')
+            return redirect('home')
         else:
             messages.error(request, "Invalid username or password!")
 
@@ -127,7 +127,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     messages.success(request, "Logged out successfully!")
-    return redirect("login")
+    return redirect("home")
 
 def profile_view(request):
     return render(request,"home/main/profile.html", {'user': request.user})
@@ -140,7 +140,7 @@ def sellbooks(request):
 def contact(request):
     return render(request, 'home/main/contact.html')
 
-
+@login_required(login_url='/login/')
 def buybooks(request):
     books = Book.objects.all()
     cart_items = OrderItem.objects.filter(user=request.user, ordered=False).values_list('item_id', flat=True)
@@ -151,6 +151,45 @@ def buybooks(request):
 
     return render(request, "home/main/buybook.html", context)
 
+
+@login_required(login_url='/login/')
+def academic(request):
+    books = Book.objects.filter(category='Academic')
+    cart_items = OrderItem.objects.filter(user=request.user, ordered=False).values_list('item_id', flat=True)
+
+    context = {
+        'books': books,
+        'cart_items': cart_items
+    }
+
+    return render(request, "home/main/buybook.html", context)
+
+@login_required(login_url='/login/')
+
+def personaldevelopment(request):
+    books = Book.objects.filter(category='Personal Development')
+    cart_items = OrderItem.objects.filter(user=request.user, ordered=False).values_list('item_id', flat=True)
+
+    context = {
+        'books': books,
+        'cart_items': cart_items
+    }
+
+    return render(request, "home/main/buybook.html", context)
+
+
+@login_required(login_url='/login/')
+
+def novels(request):
+    books = Book.objects.filter(category='Novels')
+    cart_items = OrderItem.objects.filter(user=request.user, ordered=False).values_list('item_id', flat=True)
+
+    context = {
+        'books': books,
+        'cart_items': cart_items
+    }
+
+    return render(request, "home/main/buybook.html", context)
 
 @login_required(login_url='/login/')
 def add_to_cart(request, id):
@@ -217,6 +256,33 @@ def book_appointment(request):
         form = AppointmentForm()
     return render(request, "home/main/addbook.html", {"form": form})
 
+def checkout(request):
+    if request.method == 'POST':
+        full_name = request.POST['full_name']
+        phone_number = request.POST['phone_number']
+        street_address = request.POST['street_address']
+        city = request.POST['city']
+        state = request.POST['state']
+        postal_code = request.POST['postal_code']
+        landmark = request.POST.get('landmark', '')
+        address_type = request.POST['address_type']
+
+        # Create and save the address
+        Address.objects.create(
+            user=request.user,
+            full_name=full_name,
+            phone_number=phone_number,
+            street_address=street_address,
+            city=city,
+            state=state,
+            postal_code=postal_code,
+            landmark=landmark,
+            address_type=address_type
+        )
+        messages.success(request, "Address added successfully!")
+        return redirect('checkout')
+
+    return render(request, 'home/main/checkout.html')
 
 def contact_admin(request):
     if request.method == "POST":
@@ -228,3 +294,16 @@ def contact_admin(request):
         form = ContactAdminForm()
 
     return render(request, 'home/main/contact.html', {"form": form})
+
+
+
+def buy(request):
+    cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
+    total_price = sum(item.item.discounted_price for item in cart_items) + 50
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+
+    return render(request,"home/main/buy.html",context=context)

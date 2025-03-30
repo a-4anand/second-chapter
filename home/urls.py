@@ -15,9 +15,15 @@ urlpatterns = [
     path("book-appointment/", views.book_appointment, name="book_appointment"),
     path("contact_admin/",views.contact_admin,name="contact_admin"),
     path("buybooks",views.buybooks,name='buybooks'),
+    path("novels/",views.novels,name='novels'),
+    path("personaldevelopment/",views.personaldevelopment,name='personaldevelopment'),
+    path("academic/",views.academic,name='academic'),
     path("cart/",views.cart_view,name='cart'),
     path("profile",views.profile_view,name='profile'),
     path('order-item/<int:id>/', views.add_to_cart, name='OrderItem'),
+    path("buy",views.buy, name='buy'),
+    path('checkout/', views.checkout, name='checkout'),
+
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove-from-cart'),
     path('verify-otp/', views.otp_verify_view, name='otp_verify'),
     # Password reset URLs

@@ -106,12 +106,11 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
-        
         
         
         
@@ -144,7 +143,8 @@
     </table>
     <h4 style= "color: red;">₹ 50/- Delivery charge is applicable</h4>
     <h4>Total: ₹{{ total_price|floatformat:2 }}</h4>
-    <a href="#" class="btn btn-primary">Proceed to Checkout</a>
+    <a href="{% url 'buy' %}" class="btn btn-primary">Proceed to Checkout</a>
+    <a href="{% url 'buybooks' %}"class="btn btn-primary">Add More Books</a>
 </div>
 
 

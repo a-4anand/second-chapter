@@ -34,7 +34,7 @@
             <div class="nav-divider"></div>
         
             <a href="{% url 'profile' %}">View Profile</a>
-            <a href="{% url 'cart' %}">Your Orders</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
@@ -77,27 +77,29 @@
         </div>
     </div>
 
-    <div class="shop-category-section">
-        <h2>Shop by category</h2>
-        <div class="category-container">
-            <div class="category-card">
-                <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
-                <h3>ACADEMIC & TEXTBOOKS</h3>
-                <p>Find affordable school, college, and reference books</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
-                <h3>FICTION & NOVELS</h3>
-                <p>Explore bestsellers, classics, and contemporary reads.</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-                <h3>RARE & COLLECTIBLES</h3>
-                <p>Discover antique, first editions, and unique finds.</p>
-            </div>
+<div class="shop-category-section">
+    <h2>Shop by category</h2>
+    <div class="category-container">
+        <div class="category-card">
+            <a href="{% url 'academic' %}" class="category-link">
+            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
+            <h3>ACADEMIC & TEXTBOOKS</h3>
+                <p>Find affordable school, college, and reference books</p></a>
         </div>
-        <button class="shop-all-btn" id="about">Shop All</button>
+        <div class="category-card">
+             <a href="{% url 'novels' %}" class="category-link">
+            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
+            <h3>FICTION & NOVELS</h3>
+                 <p>Explore bestsellers, classics, and contemporary reads.</p></a>
+        </div>
+        <div class="category-card">
+            <a href="{% url 'personaldevelopment' %}" class="category-link">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
+            <h3>Personal Developments</h3>
+                <p>Develop Your Personal Growth with Personal Development Books.</p></a>
+        </div>
     </div>
+</div>
     
     <section class="about-section" >
         <div class="about-container">

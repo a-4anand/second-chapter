@@ -15,7 +15,7 @@
         </div>
 
         <nav>
-            <a href="{% url 'sellbooks' %}" style="text-decoration: none;">⬅ Back</a>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
         
             <div class="nav-divider"></div>
         
@@ -32,12 +32,11 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
-        
         
         
         

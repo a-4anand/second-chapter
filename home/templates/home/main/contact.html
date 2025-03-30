@@ -13,7 +13,7 @@
             justify-content: center;
             gap: 20px;
             background: #fff;
-            margin: 120px auto;
+            margin: 150px auto;
             padding: 2rem;
             width: 90%;
             max-width: 800px;
@@ -79,15 +79,25 @@
             cursor: pointer;
         }
 
-        @media (max-width: 768px) {
-            .contact-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .contact-image, .contact-form {
-                width: 100%;
-            }
-        }
+       @media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+        margin: 150px auto;
+    }
+    .contact-image, .contact-form {
+        width: 100%;
+    }
+    .contact-image {
+        margin-top: 0;
+    }
+    .contact-image img {
+        width: 80%;
+        margin-top: 20px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -97,7 +107,7 @@
         </div>
 
         <nav>
-            <a href="{% url 'contact' %}" style="text-decoration: none;">⬅ Back</a>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
         
             <div class="nav-divider"></div>
         
@@ -114,12 +124,11 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
-        
         
         
         
@@ -155,27 +164,29 @@
         </div>
     </div>
 
-    <div class="shop-category-section">
-        <h2>Shop by category</h2>
-        <div class="category-container">
-            <div class="category-card">
-                <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
-                <h3>ACADEMIC & TEXTBOOKS</h3>
-                <p>Find affordable school, college, and reference books</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
-                <h3>FICTION & NOVELS</h3>
-                <p>Explore bestsellers, classics, and contemporary reads.</p>
-            </div>
-            <div class="category-card">
-                <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-                <h3>RARE & COLLECTIBLES</h3>
-                <p>Discover antique, first editions, and unique finds.</p>
-            </div>
+<div class="shop-category-section">
+    <h2>Shop by category</h2>
+    <div class="category-container">
+        <div class="category-card">
+            <a href="{% url 'academic' %}" class="category-link">
+            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
+            <h3>ACADEMIC & TEXTBOOKS</h3>
+                <p>Find affordable school, college, and reference books</p></a>
         </div>
-        <button class="shop-all-btn" id="about">Shop All</button>
+        <div class="category-card">
+             <a href="{% url 'novels' %}" class="category-link">
+            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
+            <h3>FICTION & NOVELS</h3>
+                 <p>Explore bestsellers, classics, and contemporary reads.</p></a>
+        </div>
+        <div class="category-card">
+            <a href="{% url 'personaldevelopment' %}" class="category-link">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
+            <h3>Personal Developments</h3>
+                <p>Develop Your Personal Growth with Personal Development Books.</p></a>
+        </div>
     </div>
+</div>
 
     <section class="about-section" >
         <div class="about-container">

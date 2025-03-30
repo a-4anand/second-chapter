@@ -15,7 +15,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            margin-top: 100px;
+            margin-top: 150px;
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
@@ -114,7 +114,7 @@
         </div>
 
         <nav>
-            <a href="{% url 'login' %}" style="text-decoration: none;">⬅ Back</a>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
         
             <div class="nav-divider"></div>
         
@@ -131,17 +131,15 @@
         
             <div class="nav-divider"></div>
         
-            <a href="#">View Profile</a>
-            <a href="#">Your Orders</a>
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
         
         
         
-        
     </header>
-    
 
     <div id="register-page-container">
         <div id="register-page-box">
