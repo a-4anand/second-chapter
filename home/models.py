@@ -57,7 +57,13 @@ class Address(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, blank=True, null=True)
-    category = models.CharField(max_length=100)
+    CATEGORY_CHOICES = [
+        ('Academic', 'Academic'),
+        ('Personal Development', 'Personal Development'),
+        ('Novels', 'Novels'),
+    ]
+
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
     condition = models.CharField(max_length=100)
     mrp = models.DecimalField(max_digits=10, decimal_places=2)
     discounted_price = models.DecimalField(max_digits=10, decimal_places=2)

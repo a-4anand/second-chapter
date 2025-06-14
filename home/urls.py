@@ -23,6 +23,7 @@ urlpatterns = [
     path('order-item/<int:id>/', views.add_to_cart, name='OrderItem'),
     path("buy",views.buy, name='buy'),
     path('checkout/', views.checkout, name='checkout'),
+    path('rzp-button',views.payment_view, name='rzp-button'),
 
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove-from-cart'),
     path('verify-otp/', views.otp_verify_view, name='otp_verify'),
@@ -36,6 +37,8 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('reset_done/', auth_views.PasswordResetCompleteView.as_view(template_name='home/password/password_reset_complete.html'),
          name='password_reset_complete'),
+
+
 
 
     

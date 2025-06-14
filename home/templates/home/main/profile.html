@@ -159,19 +159,16 @@
         
         
     </header>
-</div>
 
 <div class="container-fluid">
     
-</div>
+
 
 <div class="profile-container">
        {% if user.is_authenticated %}
     <div class="profile-header">
         <div class="profile-avatar">
-          
 
-    
         </div>
 
         <h1 class="profile-username">{{user.username}}</h1>
@@ -188,7 +185,16 @@
             <span class="detail-label">Last_login:</span>
             <span class="detail-value">{{user.last_login}}</span>
         </div>
-    </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Your Adress</span>
+            <span class="detail-value"> {% for address in addresses %}
+            <li>{{ address }}</li>
+        {% empty %}
+            <li>No addresses found.</li>
+        {% endfor %}
+            </span>
+        </div>
 
     <div class="profile-actions">
         <button class="btn edit-profile" onclick="window.location.href='{% url 'logout' %}'">
@@ -201,8 +207,8 @@
     </div>
     {% endif %}
 </div>
-  
 
+</div>
 
 
 

@@ -9,6 +9,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 import random
+from .razorpay_integration import create_razorpay_order
+import re
+from django.conf import settings
+
+
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 def home(request):
     return render(request, 'home/home.html')
@@ -33,6 +38,47 @@ def user_register(request):
             return render(request, 'home/main/register.html', {
                 "error": "Email is required"
             })
+
+        if not username:
+            return render(request, 'home/main/register.html', {
+                "error": "Username is required"
+            })
+
+        if len(password1) < 8:
+            return render(request, 'home/main/register.html', {
+                "error": "Password is too short."
+            })
+        if password1.isdigit():
+            return render(request, 'home/main/register.html', {
+                "error": "Password cannot be entirely numeric."
+            })
+
+        if password1.lower() in ['password', '12345678', 'qwerty', 'admin']:
+            return render(request, 'home/main/register.html', {
+                "error": "Password is too common."
+            })
+
+        if not re.search(r"[A-Za-z]", password1):
+            return render(request, 'home/main/register.html', {
+                "error": "Password must contain at least one letter."
+            })
+
+        if not re.search(r"[0-9]", password1):
+            return render(request, 'home/main/register.html', {
+                "error": "Password must contain at least one digit."
+            })
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password1):
+            return render(request, 'home/main/register.html', {
+                "error": "Password must contain at least one special character."
+            })
+
+        if password1 != password2:
+            return render(request, 'home/main/register.html',{
+                "error": "Passwords does not match"
+            })
+
+
 
         # Generate OTP and send it via email
         otp = random.randint(100000, 999999)
@@ -68,7 +114,7 @@ def otp_verify_view(request):
 
         # Validate OTP
         if otp_entered != str(stored_otp):
-            return render(request, 'home/pasword/otp-verify.html', {
+            return render(request, 'home/password/otp-verify.html', {
                 "error": "Invalid OTP. Please try again."
             })
 
@@ -90,20 +136,19 @@ def otp_verify_view(request):
             user = form.save()
             login(request, user)
 
-            # Clear OTP and session data
             request.session.pop('otp', None)
             request.session.pop('email', None)
             request.session.pop('username', None)
             request.session.pop('password1', None)
             request.session.pop('password2', None)
 
-            return redirect('home')  # Redirect to home page or dashboard
+            return redirect('home')
 
         return render(request, 'home/password/otp-verify.html', {
-            "error": "There was an issue with your registration."
+            "error": "The Email is already registered or There was an issue with your registration."
         })
 
-    # Show OTP form
+
     return render(request, 'home/password/otp-verify.html')
 
 
@@ -130,7 +175,8 @@ def user_logout(request):
     return redirect("home")
 
 def profile_view(request):
-    return render(request,"home/main/profile.html", {'user': request.user})
+    addresses = Address.objects.all()
+    return render(request,"home/main/profile.html", {'user': request.user,'addresses': addresses})
 
 
 def sellbooks(request):
@@ -281,7 +327,6 @@ def checkout(request):
         )
         messages.success(request, "Address added successfully!")
         return redirect('checkout')
-
     return render(request, 'home/main/checkout.html')
 
 def contact_admin(request):
@@ -307,3 +352,29 @@ def buy(request):
     }
 
     return render(request,"home/main/buy.html",context=context)
+
+
+
+
+
+
+def payment_view(request):
+    # Replace with your actual Razorpay Key ID and Secret
+    razorpay_key_id = "rzp_test_bS11AUD74lB4bg"
+    razorpay_key_secret = "k9yV68xKelFwHMUYrSrSNZz"
+
+    # Import Razorpay Python package
+    import razorpay
+    client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
+
+    amount = 50000  # in paise => ₹500
+    currency = 'INR'
+    payment_order = client.order.create(dict(amount=amount, currency=currency, payment_capture=1))
+    order_id = payment_order['id']
+
+    context = {
+        'razorpay_key_id': razorpay_key_id,
+        'amount': amount,
+        'order_id': order_id
+    }
+    return render(request, 'home/main/checkout.html', context)

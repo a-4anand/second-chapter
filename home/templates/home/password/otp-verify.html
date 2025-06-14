@@ -125,9 +125,11 @@
 <div class="otp-container">
     <h3>Verify OTP</h3>
 
-    {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-    {% endif %}
+ {% if error %}
+  <div style="color: red; margin-bottom: 10px; margin-top:10px; font-weight: bold ">
+    {{ error }}
+  </div>
+{% endif %}
 
     <form method="POST" action="{% url 'otp_verify' %}">
         {% csrf_token %}
