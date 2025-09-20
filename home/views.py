@@ -328,8 +328,8 @@ def checkout(request):
 
     # Razorpay setup
     # Note: For better security, store these keys in your project's settings.py file
-    razorpay_key_id = "rzp_test_bS11AUD74lB4bg"
-    razorpay_key_secret = "k9yV68xKelFwHMUYrSrSNZz"
+    razorpay_key_id = 'rzp_test_R5A4lFGHGoePxD'
+    razorpay_key_secret = 'ASLbYSSDC0yKbyXoM0SyglEK'
 
     client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
     amount = int(total_price * 100)  # Amount in paise (e.g., ₹500.50 -> 50050)
@@ -366,41 +366,45 @@ def contact_admin(request):
     return render(request, 'home/main/contact.html', {"form": form})
 
 
+# In views.py
 
 def buy(request):
     user = request.user
-
     user_has_address = Address.objects.filter(user=user).exists()
 
-    if request.method == 'POST' and not user_has_address:
-        # Save new address
-        Address.objects.create(
-            user=user,
-            full_name=request.POST['full_name'],
-            phone_number=request.POST['phone_number'],
-            street_address=request.POST['street_address'],
-            city=request.POST['city'],
-            state=request.POST['state'],
-            postal_code=request.POST['postal_code'],
-            landmark=request.POST.get('landmark', ''),
-            address_type=request.POST['address_type']
-        )
-        messages.success(request, "Address added successfully!")
-        return redirect('checkout')
+    # This POST logic is already correct
+    if request.method == 'POST':
+        if not user_has_address:
+            # Save new address
+            Address.objects.create(
+                user=user,
+                full_name=request.POST['full_name'],
+                phone_number=request.POST['phone_number'],
+                street_address=request.POST['street_address'],
+                city=request.POST['city'],
+                state=request.POST['state'],
+                postal_code=request.POST['postal_code'],
+                landmark=request.POST.get('landmark', ''),
+                address_type=request.POST['address_type']
+            )
+            messages.success(request, "Address added successfully!")
+        else:
+            messages.info(request, "Address already exists.")
 
-    elif request.method == 'POST':
-        messages.info(request, "Address already exists.")
-        return redirect('checkout')
+        return redirect('checkout')  # Redirect to the payment page
 
+    # --- THIS IS THE CORRECTED GET REQUEST LOGIC ---
     cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
     total_price = sum(item.item.discounted_price for item in cart_items) + 50
 
     context = {
         'cart_items': cart_items,
-        'total_price': total_price
+        'total_price': total_price,
+        'show_address_form': not user_has_address  # <-- ADDED THIS LINE
     }
 
-    return render(request,"home/main/buy.html",context=context)
+    # This view should render 'buy.html', which contains the address form
+    return render(request, "home/main/buy.html", context=context)
 
 
 
