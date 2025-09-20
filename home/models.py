@@ -6,7 +6,7 @@ from django.db import models
 
 class Appointment(models.Model):
     full_name = models.CharField(max_length=255)
-    pickup_date = models.DateField()
+    pickup_date = models.DateField(null=True, blank=True)
     time_slot = models.CharField(max_length=50)
     mobile_number = models.CharField(max_length=15)
     book_condition = models.CharField(max_length=50)

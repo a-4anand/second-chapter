@@ -76,7 +76,7 @@
 
 <main>
      <h2>Pay Now</h2>
-    <button id="rzp-button">Pay ₹500</button>
+    <button id="rzp-button">Pay ₹{{ total_price }}</button>
 </main>
 
 
@@ -172,22 +172,27 @@ backBtn.addEventListener("click", () => form.classList.remove('secActive'));
         document.querySelector('.menu-container').classList.toggle('active');
     }
 
-
 var options = {
-    "key": "{{ razorpay_key_id }}",
-    "amount": "{{ amount }}",
-    "currency": "INR",
-    "name": "Second Chapter",
-    "description": "Test Transaction",
-    "order_id": "{{ order_id }}",
-    "handler": function (response){
-        alert("Payment Successful!");
-    },
-    "theme": {
-        "color": "#3399cc"
-    }
-};
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount }}",
+        "currency": "INR",
+        "name": "Second Chapter",
+        "description": "Order Payment",
+        "order_id": "{{ order_id }}",
+        "handler": function (response){
+            alert("Payment Successful!");
+            // You can redirect to order success page here
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
 
+    var rzp = new Razorpay(options);
+    document.getElementById('rzp-button').onclick = function(e){
+        rzp.open();
+        e.preventDefault();
+    }
 
 
 

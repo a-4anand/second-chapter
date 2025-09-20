@@ -132,6 +132,7 @@
 {% endif %}
 
     <form method="POST" action="{% url 'otp_verify' %}">
+
         {% csrf_token %}
 
         <!-- OTP -->

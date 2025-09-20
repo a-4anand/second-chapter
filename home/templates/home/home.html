@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Second Chapter - Buy & Sell Used Books</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-
 </head>
 <body>
 
@@ -14,48 +13,32 @@
         <div class="logo">
             <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
         </div>
-
         <nav>
             <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
-        
             <div class="nav-divider"></div>
-        
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'register' %}">Register</a>
-        
             <div class="nav-divider"></div>
-        
             <a href="{% url 'buybooks' %}">Buy Books</a>
             <a href="{% url 'sellbooks' %}">Sell Books</a>
             <a href="#about">About</a>
             <a href="{% url 'contact' %}">Contact</a>
-        
             <div class="nav-divider"></div>
-        
             <a href="{% url 'profile' %}">View Profile</a>
             <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
-        
-        
-        
     </header>
-    
 
     <section class="hero">
         <div class="hero-text">
             <h1>Welcome to <span>Second Chapter</span></h1>
             <p>Where every book finds a new story</p>
             <div class="hero-buttons">
-                <a href="buybooks">
-                    <button class="btn-primary">Buy Used Books</button>
-                </a>
-               
-                <a href="sellbooks">
-                    <button class="btn-secondary">Sell Used Books</button>
-                </a>
+                <a href="buybooks"><button class="btn-primary">Buy Used Books</button></a>
+                <a href="sellbooks"><button class="btn-secondary">Sell Used Books</button></a>
             </div>
         </div>
         <div class="hero-image">
@@ -66,42 +49,41 @@
     <div class="book-section">
         <div class="book-text">
             <h2>Buy & Sell Used Books at Low Prices – Give Stories a Second Life!</h2>
-            <p>Looking for affordable books or want to declutter your shelf? Second Chapter connects book lovers to buy and sell pre-loved books easily. 
-            Find rare classics, textbooks, and bestsellers at unbeatable prices. Save money, promote sustainability, and share the joy of reading! 
-            Start your next chapter today!</p>
+            <p>Looking for affordable books or want to declutter your shelf? Second Chapter connects book lovers to buy and sell pre-loved books easily. Find rare classics, textbooks, and bestsellers at unbeatable prices. Save money, promote sustainability, and share the joy of reading! Start your next chapter today!</p>
         </div>
         <div class="book-image">
-            <img src="{% static 'assets/img/openart-image_gZOSPwo6_1741035907520_raw.jpg' %}" alt="Book with pen">
-    
-
+            <img src="{% static 'assets/img/openart-image_gZOSPwo6_1741035907520_raw.jpg' %}" alt="Book with pen" loading="lazy" decoding="async">
         </div>
     </div>
 
-<div class="shop-category-section">
-    <h2>Shop by category</h2>
-    <div class="category-container">
-        <div class="category-card">
-            <a href="{% url 'academic' %}" class="category-link">
-            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
-            <h3>ACADEMIC & TEXTBOOKS</h3>
-                <p>Find affordable school, college, and reference books</p></a>
-        </div>
-        <div class="category-card">
-             <a href="{% url 'novels' %}" class="category-link">
-            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
-            <h3>FICTION & NOVELS</h3>
-                 <p>Explore bestsellers, classics, and contemporary reads.</p></a>
-        </div>
-        <div class="category-card">
-            <a href="{% url 'personaldevelopment' %}" class="category-link">
-            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-            <h3>Personal Developments</h3>
-                <p>Develop Your Personal Growth with Personal Development Books.</p></a>
+    <div class="shop-category-section">
+        <h2>Shop by category</h2>
+        <div class="category-container">
+            <div class="category-card">
+                <a href="{% url 'academic' %}" class="category-link">
+                    <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks" loading="lazy" decoding="async">
+                    <h3>ACADEMIC & TEXTBOOKS</h3>
+                    <p>Find affordable school, college, and reference books</p>
+                </a>
+            </div>
+            <div class="category-card">
+                <a href="{% url 'novels' %}" class="category-link">
+                    <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels" loading="lazy" decoding="async">
+                    <h3>FICTION & NOVELS</h3>
+                    <p>Explore bestsellers, classics, and contemporary reads.</p>
+                </a>
+            </div>
+            <div class="category-card">
+                <a href="{% url 'personaldevelopment' %}" class="category-link">
+                    <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles" loading="lazy" decoding="async">
+                    <h3>Personal Developments</h3>
+                    <p>Develop Your Personal Growth with Personal Development Books.</p>
+                </a>
+            </div>
         </div>
     </div>
-</div>
-    
-    <section class="about-section" >
+
+    <section class="about-section">
         <div class="about-container">
             <div class="about-text">
                 <h2>About Second Chapter</h2>
@@ -111,17 +93,18 @@
                 <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
             </div>
             <div class="about-image">
-                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books" loading="lazy" decoding="async">
             </div>
         </div>
     </section>
-    <footer class="footer">
+
+<footer class="footer">
         <div class="footer-container">
             <div class="footer-about">
                 <h3>Second Chapter</h3>
                 <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
             </div>
-            
+
             <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
@@ -130,14 +113,13 @@
                     <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="{% url 'contact' %}">Contact</a></li>
-                    <li><a href="{% url 'profile' %}">View Profile</a></li>
+                    <li><a href="#">View Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                     <li><a href="#">Settings</a></li>
-                    
                 </ul>
-                
+
             </div>
-            
+
             <div class="footer-contact">
                 <h4>Contact Us</h4>
                 <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
@@ -145,46 +127,34 @@
                 <p>Location: Pune, India</p>
             </div>
         </div>
-    
+
         <div class="footer-bottom">
             <p>&copy; 2024 Second Chapter. All rights reserved.</p>
         </div>
-    </footer>
-    
-    
-</body>
+</footer>
 
 <script>
-
+    // --- Cleaned up and consolidated JavaScript ---
     document.addEventListener("DOMContentLoaded", function () {
         const nav = document.querySelector("nav");
-        const menuToggle = document.querySelector(".menu-toggle");
-    
-        menuToggle.addEventListener("click", function () {
-            nav.classList.toggle("active");
-        });
-    });
-    
-    document.addEventListener("DOMContentLoaded", function () {
-        const nav = document.querySelector("nav");
+        // Create the menu toggle button dynamically
         const menuToggle = document.createElement("div");
-    
-        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
         menuToggle.classList.add("menu-toggle");
-    
-        nav.parentNode.insertBefore(menuToggle, nav);
-    
+
+        // Insert the button before the navigation bar in the header
+        const header = document.querySelector("header");
+        if (header) {
+            header.insertBefore(menuToggle, nav);
+        }
+
+        // Add a single event listener to toggle classes
         menuToggle.addEventListener("click", function () {
             nav.classList.toggle("active");
             menuToggle.classList.toggle("open");
         });
     });
-
-
-    function toggleMenu() {
-        document.querySelector('.menu-container').classList.toggle('active');
-    }
-
-    
 </script>
+</body>
 </html>

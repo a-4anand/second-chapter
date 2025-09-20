@@ -11,10 +11,13 @@ from django.core.mail import send_mail
 import random
 from .razorpay_integration import create_razorpay_order
 import re
+import razorpay
 from django.conf import settings
-
-
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+
+
 def home(request):
     return render(request, 'home/home.html')
 
@@ -175,7 +178,7 @@ def user_logout(request):
     return redirect("home")
 
 def profile_view(request):
-    addresses = Address.objects.all()
+    addresses = Address.objects.filter(user=request.user)
     return render(request,"home/main/profile.html", {'user': request.user,'addresses': addresses})
 
 
@@ -292,42 +295,64 @@ def remove_from_cart(request, item_id):
     return redirect("cart")
 
 
+
+
 def book_appointment(request):
     if request.method == "POST":
         form = AppointmentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return HttpResponse("Form submitted successfully!")
+            return redirect("success")
     else:
         form = AppointmentForm()
     return render(request, "home/main/addbook.html", {"form": form})
 
-def checkout(request):
-    if request.method == 'POST':
-        full_name = request.POST['full_name']
-        phone_number = request.POST['phone_number']
-        street_address = request.POST['street_address']
-        city = request.POST['city']
-        state = request.POST['state']
-        postal_code = request.POST['postal_code']
-        landmark = request.POST.get('landmark', '')
-        address_type = request.POST['address_type']
+  # make sure Address is correctly imported
 
-        # Create and save the address
-        Address.objects.create(
-            user=request.user,
-            full_name=full_name,
-            phone_number=phone_number,
-            street_address=street_address,
-            city=city,
-            state=state,
-            postal_code=postal_code,
-            landmark=landmark,
-            address_type=address_type
-        )
-        messages.success(request, "Address added successfully!")
-        return redirect('checkout')
-    return render(request, 'home/main/checkout.html')
+def success(request):
+    return render(request, "home/main/success.html")
+
+
+from .models import OrderItem, Address # Make sure Address is imported
+
+def checkout(request):
+    user = request.user
+
+    # --- THIS WAS THE MISSING LINE ---
+    # Check if an address for the current user already exists in the database.
+    user_has_address = Address.objects.filter(user=user).exists()
+
+    # Get cart and total
+    cart_items = OrderItem.objects.filter(user=user, ordered=False)
+    total_price = sum(item.item.discounted_price for item in cart_items) + 50
+
+    # Razorpay setup
+    # Note: For better security, store these keys in your project's settings.py file
+    razorpay_key_id = "rzp_test_bS11AUD74lB4bg"
+    razorpay_key_secret = "k9yV68xKelFwHMUYrSrSNZz"
+
+    client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
+    amount = int(total_price * 100)  # Amount in paise (e.g., ₹500.50 -> 50050)
+    currency = 'INR'
+
+    payment_order = client.order.create({
+        'amount': amount,
+        'currency': currency,
+        'payment_capture': 1
+    })
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'razorpay_key_id': razorpay_key_id,
+        'amount': amount,
+        'order_id': payment_order['id'],
+        'show_address_form': not user_has_address  # Now this variable will work correctly
+    }
+
+    return render(request, 'home/main/checkout.html', context)
+
+
 
 def contact_admin(request):
     if request.method == "POST":
@@ -343,6 +368,30 @@ def contact_admin(request):
 
 
 def buy(request):
+    user = request.user
+
+    user_has_address = Address.objects.filter(user=user).exists()
+
+    if request.method == 'POST' and not user_has_address:
+        # Save new address
+        Address.objects.create(
+            user=user,
+            full_name=request.POST['full_name'],
+            phone_number=request.POST['phone_number'],
+            street_address=request.POST['street_address'],
+            city=request.POST['city'],
+            state=request.POST['state'],
+            postal_code=request.POST['postal_code'],
+            landmark=request.POST.get('landmark', ''),
+            address_type=request.POST['address_type']
+        )
+        messages.success(request, "Address added successfully!")
+        return redirect('checkout')
+
+    elif request.method == 'POST':
+        messages.info(request, "Address already exists.")
+        return redirect('checkout')
+
     cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
     total_price = sum(item.item.discounted_price for item in cart_items) + 50
 
@@ -364,7 +413,7 @@ def payment_view(request):
     razorpay_key_secret = "k9yV68xKelFwHMUYrSrSNZz"
 
     # Import Razorpay Python package
-    import razorpay
+
     client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
 
     amount = 50000  # in paise => ₹500

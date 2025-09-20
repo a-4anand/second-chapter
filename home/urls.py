@@ -24,6 +24,7 @@ urlpatterns = [
     path("buy",views.buy, name='buy'),
     path('checkout/', views.checkout, name='checkout'),
     path('rzp-button',views.payment_view, name='rzp-button'),
+    path('success/', views.success, name='success'),
 
     path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove-from-cart'),
     path('verify-otp/', views.otp_verify_view, name='otp_verify'),

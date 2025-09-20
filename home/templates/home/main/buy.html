@@ -82,7 +82,8 @@ input, select {
 
         <h2>total payable amount : ₹{{ total_price|floatformat:2 }}</h2>
 
-    <form method="POST" action="{% url 'checkout' %}">
+{% if show_address_form %}
+<form method="POST" action="{% url 'checkout' %}">
     {% csrf_token %}
     <div class="form-group">
         <label for="full_name">Full Name</label>
@@ -129,6 +130,10 @@ input, select {
 
     <button type="submit" class="btn">Save Address</button>
 </form>
+{% else %}
+<p>Your address is already saved.</p>
+{% endif %}
+
     </section>
 
 
