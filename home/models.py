@@ -81,8 +81,36 @@ class Book(models.Model):
         return self.title
 
 
+
+
+
+class Order(models.Model):
+    ORDER_STATUS_CHOICES = (
+        ('Processing', 'Processing'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shipping_address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
+    razorpay_order_id = models.CharField(max_length=100, unique=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=100, blank=True, null=True)
+    total_amount = models.FloatField()
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=ORDER_STATUS_CHOICES, default='Processing')
+    is_paid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.razorpay_order_id
+
 class OrderItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Book, on_delete=models.CASCADE)
+    # Add this field to link an item to a specific order after purchase
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, null=True, blank=True)
+    ordered = models.BooleanField(default=False) # This flag differentiates cart items from ordered items
+
+    def __str__(self):
+        return f"{self.item.title} for {self.user.username}"

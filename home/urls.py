@@ -39,6 +39,9 @@ urlpatterns = [
     path('reset_done/', auth_views.PasswordResetCompleteView.as_view(template_name='home/password/password_reset_complete.html'),
          name='password_reset_complete'),
 
+    path('order-history/', views.order_history, name='order_history'),
+    path('payment/success/', views.payment_success, name='payment_success'),
+
 
 
 

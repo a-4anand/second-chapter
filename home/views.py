@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import AppointmentForm, ContactAdminForm
-from .models import Appointment, ContactAdmin, Book, OrderItem, Address
+from .models import Appointment, ContactAdmin, Book, OrderItem, Address,Order
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -15,9 +15,9 @@ import razorpay
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
-
-
+import os
+razorpay_key_id = os.getenv('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
 def home(request):
     return render(request, 'home/home.html')
 
@@ -326,12 +326,8 @@ def checkout(request):
     cart_items = OrderItem.objects.filter(user=user, ordered=False)
     total_price = sum(item.item.discounted_price for item in cart_items) + 50
 
-    # Razorpay setup
-    # Note: For better security, store these keys in your project's settings.py file
-    razorpay_key_id = 'rzp_test_R5A4lFGHGoePxD'
-    razorpay_key_secret = 'ASLbYSSDC0yKbyXoM0SyglEK'
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-    client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
     amount = int(total_price * 100)  # Amount in paise (e.g., ₹500.50 -> 50050)
     currency = 'INR'
 
@@ -370,13 +366,22 @@ def contact_admin(request):
 
 def buy(request):
     user = request.user
-    user_has_address = Address.objects.filter(user=user).exists()
+    # Get all addresses for this user to display on the page
+    addresses = Address.objects.filter(user=user)
 
-    # This POST logic is already correct
+    # This block handles the form submission
     if request.method == 'POST':
-        if not user_has_address:
-            # Save new address
-            Address.objects.create(
+        # Case 1: The user selected an existing address from the radio buttons
+        if 'selected_address' in request.POST:
+            address_id = request.POST.get('selected_address')
+            # Save the chosen address ID in the session
+            request.session['shipping_address_id'] = address_id
+            messages.success(request, "Address selected. Please proceed with payment.")
+            return redirect('checkout')
+
+        # Case 2: The user filled out the form to add a new address
+        else:
+            new_address = Address.objects.create(
                 user=user,
                 full_name=request.POST['full_name'],
                 phone_number=request.POST['phone_number'],
@@ -387,24 +392,16 @@ def buy(request):
                 landmark=request.POST.get('landmark', ''),
                 address_type=request.POST['address_type']
             )
-            messages.success(request, "Address added successfully!")
-        else:
-            messages.info(request, "Address already exists.")
+            # Save the NEW address ID in the session
+            request.session['shipping_address_id'] = new_address.id
+            messages.success(request, "New address saved. Please proceed with payment.")
+            return redirect('checkout')
 
-        return redirect('checkout')  # Redirect to the payment page
-
-    # --- THIS IS THE CORRECTED GET REQUEST LOGIC ---
-    cart_items = OrderItem.objects.filter(user=request.user, ordered=False)
-    total_price = sum(item.item.discounted_price for item in cart_items) + 50
-
+    # This block handles the initial page load (GET request)
     context = {
-        'cart_items': cart_items,
-        'total_price': total_price,
-        'show_address_form': not user_has_address  # <-- ADDED THIS LINE
+        'addresses': addresses,
     }
-
-    # This view should render 'buy.html', which contains the address form
-    return render(request, "home/main/buy.html", context=context)
+    return render(request, "home/main/buy.html", context)
 
 
 
@@ -431,3 +428,173 @@ def payment_view(request):
         'order_id': order_id
     }
     return render(request, 'home/main/checkout.html', context)
+
+
+# ... add these to your imports ...
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings  # If you store keys in settings.py
+
+
+# This is a helper function to send the admin email. You can place it in views.py.
+def send_admin_order_notification(order):
+    subject = f"New Order Received - ID: {order.razorpay_order_id}"
+    items_list = "\n".join([f"- {item.item.title}" for item in order.items.all()])
+
+    # Ensure shipping address exists before accessing its attributes
+    if order.shipping_address:
+        address_details = f"""
+        {order.shipping_address.full_name}
+        {order.shipping_address.street_address}
+        {order.shipping_address.city}, {order.shipping_address.state} - {order.shipping_address.postal_code}
+        Phone: {order.shipping_address.phone_number}
+        """
+    else:
+        address_details = "No shipping address provided."
+
+    message = f"""
+    A new order has been placed.
+
+    Order Details:
+    ----------------
+    Order ID: {order.razorpay_order_id}
+    Customer: {order.user.username} ({order.user.email})
+    Total Amount: ₹{order.total_amount}
+    Payment ID: {order.razorpay_payment_id}
+    Order Date: {order.ordered_date.strftime('%Y-%m-%d %H:%M:%S')}
+
+    Items Ordered:
+    ----------------
+    {items_list}
+
+    Shipping Address:
+    ----------------
+    {address_details}
+    """
+    # Make sure to configure email settings in settings.py
+    # and add ADMIN_EMAIL = 'your_admin_email@example.com'
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.ADMIN_EMAIL]
+    )
+
+
+@csrf_exempt
+@csrf_exempt
+def payment_success(request):
+    if request.method == "POST":
+        try:
+            # ... (the beginning of your try block remains the same)
+            payment_data = request.POST
+            razorpay_order_id = payment_data.get('razorpay_order_id', '')
+            razorpay_payment_id = payment_data.get('razorpay_payment_id', '')
+            razorpay_signature = payment_data.get('razorpay_signature', '')
+
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_signature': razorpay_signature
+            }
+
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            client.utility.verify_payment_signature(params_dict)
+
+            user = request.user
+            address_id = request.session.get('shipping_address_id')
+
+            if not address_id:
+                messages.error(request, "No shipping address selected.")
+                return redirect('buy')
+
+            shipping_address = Address.objects.get(id=address_id, user=user)
+            cart_items = OrderItem.objects.filter(user=user, ordered=False)
+            total_price = sum(item.item.discounted_price for item in cart_items) + 50
+
+            new_order = Order.objects.create(
+                user=user,
+                shipping_address=shipping_address,
+                razorpay_order_id=razorpay_order_id,
+                razorpay_payment_id=razorpay_payment_id,
+                razorpay_signature=razorpay_signature,
+                total_amount=total_price,
+                is_paid=True
+            )
+
+            for item in cart_items:
+                item.order = new_order
+                item.ordered = True
+                item.save()
+
+            # --- 🚀 ACTION REQUIRED HERE ---
+            # Send email to admin
+            send_admin_order_notification(new_order)
+            # ✅ Send confirmation email to the customer
+            send_customer_order_confirmation(new_order)
+
+            # Clean up the session after the order is created
+            if 'shipping_address_id' in request.session:
+                del request.session['shipping_address_id']
+
+            messages.success(request, "Your order has been placed successfully!")
+            return redirect('order_history')
+
+        except Exception as e:
+            print(f"Error in payment_success: {e}")
+            messages.error(request, "Payment failed or signature verification error.")
+            return redirect('checkout')
+
+    return redirect('home')
+
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user, is_paid=True).order_by('-ordered_date')
+    return render(request, 'home/main/order_history.html', {'orders': orders})
+
+
+def send_customer_order_confirmation(order):
+    """Sends an order confirmation email to the customer."""
+    subject = f"Your Second Chapter Order #{order.razorpay_order_id} is Confirmed!"
+    items_list = "\n".join([f"- {item.item.title} (₹{item.item.discounted_price})" for item in order.items.all()])
+
+    if order.shipping_address:
+        address_details = f"""
+        {order.shipping_address.full_name}
+        {order.shipping_address.street_address}
+        {order.shipping_address.city}, {order.shipping_address.state} - {order.shipping_address.postal_code}
+        Phone: {order.shipping_address.phone_number}
+        """
+    else:
+        address_details = "No shipping address provided."
+
+    message = f"""
+    Hi {order.user.username},
+
+    Thank you for your order! We've received it and are getting it ready for you. 📚
+
+    Order Summary:
+    ----------------
+    Order ID: {order.razorpay_order_id}
+    Total Amount Paid: ₹{order.total_amount}
+    Order Date: {order.ordered_date.strftime('%Y-%m-%d %H:%M')}
+
+    Items Ordered:
+    ----------------
+    {items_list}
+
+    Shipping To:
+    ----------------
+    {address_details}
+
+    We'll notify you again once your order has shipped.
+
+    Thanks,
+    The Second Chapter Team
+    """
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [order.user.email]  # <-- This sends the email to the customer
+    )

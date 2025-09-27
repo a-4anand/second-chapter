@@ -1,0 +1,453 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Second Chapter - Buy & Sell Used BooksSecond Chapter - Buy & Sell Used Books{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+<style>
+    /* Import Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;500&display=swap');
+
+    /* Themed Color Palette */
+    :root {
+        --bg-cream: #fdfaf5;
+        --text-dark: #4a4a4a;
+        --text-light: #7a7a7a;
+        --border-color: #e0d9cf;
+        --accent-teal: #00796b;
+        --accent-orange: #f57c00;
+        --accent-green: #388e3c;
+        --accent-blue: #1976d2;
+    }
+
+    .order-history-container {
+        font-family: 'Inter', sans-serif;
+        max-width: 900px;
+        margin: 4rem auto;
+        margin-top: 200px;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+    }
+
+    .order-history-header h2 {
+        font-family: 'Lora', serif;
+        font-size: 2.5rem;
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    /* Decorative underline */
+    .order-history-header h2::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 3px;
+        background-color: var(--accent-teal);
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Accordion Styling */
+    .order-accordion {
+        background-color: var(--bg-cream);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out, box-shadow 0.3s ease;
+    }
+    .order-accordion.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .order-accordion:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .order-accordion__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        cursor: pointer;
+    }
+
+    .order-accordion__header-info h4 {
+        font-family: 'Lora', serif;
+        font-size: 1.2rem;
+        margin: 0 0 5px 0;
+        color: var(--text-dark);
+    }
+    .order-accordion__header-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    .order-accordion__header-summary {
+        text-align: right;
+    }
+    .order-accordion__header-summary .total-price {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--accent-teal);
+    }
+
+    .order-accordion__toggle {
+        margin-left: 1rem;
+        transition: transform 0.4s ease;
+    }
+    .order-accordion.active .order-accordion__toggle {
+        transform: rotate(180deg);
+    }
+
+    .order-accordion__body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+        padding: 0 1.5rem;
+    }
+    .order-accordion.active .order-accordion__body {
+        max-height: 1000px; /* Adjust if content is larger */
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+
+    .order-details-content {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1.5rem;
+    }
+
+    /* Status Timeline */
+    .status-timeline {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    .status-timeline::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background-color: var(--border-color);
+    }
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        width: 80px;
+    }
+    .timeline-step__icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: var(--border-color);
+        border: 3px solid var(--bg-cream);
+        transition: background-color 0.3s ease;
+    }
+    .timeline-step__label {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-light);
+        text-align: center;
+    }
+    .timeline-step.completed .timeline-step__icon {
+        background-color: var(--accent-green);
+    }
+    .timeline-step.active .timeline-step__icon {
+        background-color: var(--accent-orange);
+    }
+
+    /* Details Grid */
+    .order-details-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+
+    .order-items-list h5, .shipping-details h5 {
+        font-family: 'Lora', serif;
+        margin-bottom: 1rem;
+        color: var(--text-dark);
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .order-item__image {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-right: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .order-item__info p {
+        margin: 0;
+    }
+    .order-item__info .title {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+    .order-item__info .price {
+        font-size: 0.9rem;
+        color: var(--text-light);
+    }
+
+    .shipping-details address {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--text-dark);
+    }
+</style>
+
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+        </div>
+
+        <nav>
+            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
+
+            <div class="nav-divider"></div>
+
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+
+            <div class="nav-divider"></div>
+
+            <a href="{% url 'buybooks' %}">Buy Books</a>
+            <a href="{% url 'sellbooks' %}">Sell Books</a>
+            <a href="#about">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+
+            <div class="nav-divider"></div>
+
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
+            <a href="#">Settings</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+
+
+
+
+
+    </header>
+</div>
+<div class="order-history-container">
+    <div class="order-history-header">
+        <h2>My Order History</h2>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-accordion">
+            <div class="order-accordion__header">
+                <div class="order-accordion__header-info">
+                    <h4>Order #{{ order.razorpay_order_id }}</h4>
+                    <p>Placed on {{ order.ordered_date|date:"F d, Y" }}</p>
+                </div>
+                <div class="order-accordion__header-summary">
+                    <span class="total-price">₹{{ order.total_amount }}</span>
+                    <span class="order-accordion__toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </span>
+                </div>
+            </div>
+            <div class="order-accordion__body">
+                <div class="order-details-content">
+                    <div class="status-timeline">
+                        <div class="timeline-step {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}completed{% endif %} active">
+                            <div class="timeline-step__icon"></div>
+                            <p class="timeline-step__label">Processing</p>
+                        </div>
+                        <div class="timeline-step {% if order.status == 'Shipped' or order.status == 'Delivered' %}completed{% endif %} {% if order.status == 'Shipped' %}active{% endif %}">
+                            <div class="timeline-step__icon"></div>
+                            <p class="timeline-step__label">Shipped</p>
+                        </div>
+                        <div class="timeline-step {% if order.status == 'Delivered' %}completed{% endif %}">
+                            <div class="timeline-step__icon"></div>
+                            <p class="timeline-step__label">Delivered</p>
+                        </div>
+                    </div>
+
+                    <div class="order-details-grid">
+                        <div class="order-items-list">
+                            <h5>Items Ordered</h5>
+                            {% for item in order.items.all %}
+                                <div class="order-item">
+                                    <img src="{{ item.item.cover_image.url }}" alt="{{ item.item.title }}" class="order-item__image">
+                                    <div class="order-item__info">
+                                        <p class="title">{{ item.item.title }}</p>
+                                        <p class="price">Price: ₹{{ item.item.discounted_price }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="shipping-details">
+                            <h5>Shipping To</h5>
+                             {% if order.shipping_address %}
+                                <address class="fst-normal">
+                                    <strong>{{ order.shipping_address.full_name }}</strong><br>
+                                    {{ order.shipping_address.street_address }}<br>
+                                    {{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.postal_code }}<br>
+                                    Phone: {{ order.shipping_address.phone_number }}
+                                </address>
+                            {% else %}
+                                <p>No address found.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center">You have not placed any orders yet.</div>
+    {% endif %}
+</div>
+
+
+
+<section class="about-section" >
+        <div class="about-container">
+            <div class="about-text">
+                <h2>About Second Chapter</h2>
+                <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
+                <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
+                <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
+                <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
+            </div>
+            <div class="about-image">
+                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
+            </div>
+        </div>
+</section>
+
+
+<footer class="footer">
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Second Chapter</h3>
+                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="#">View Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+
+            </div>
+
+            <div class="footer-contact">
+                <h4>Contact Us</h4>
+                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
+                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
+                <p>Location: Pune, India</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
+        </div>
+</footer>
+
+
+</body>
+<script>
+    const form = document.querySelector("form"),
+    nextBtn = form.querySelector(".nextBtn"),
+    backBtn = form.querySelector(".backBtn"),
+    allInput = form.querySelectorAll(".first input");
+nextBtn.addEventListener("click", ()=> {
+allInput.forEach(input => {
+    if(input.value != ""){
+        form.classList.add('secActive');
+    }else{
+        form.classList.remove('secActive');
+    }
+})
+})
+backBtn.addEventListener("click", () => form.classList.remove('secActive'));
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.createElement("div");
+
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
+        menuToggle.classList.add("menu-toggle");
+
+        nav.parentNode.insertBefore(menuToggle, nav);
+
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+            menuToggle.classList.toggle("open");
+        });
+    });
+
+    function toggleMenu() {
+        document.querySelector('.menu-container').classList.toggle('active');
+    }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Accordion functionality
+    const accordions = document.querySelectorAll('.order-accordion__header');
+
+    accordions.forEach(header => {
+        header.addEventListener('click', () => {
+            const accordionItem = header.parentElement;
+            accordionItem.classList.toggle('active');
+        });
+    });
+
+    // Staggered animation for orders appearing on page load
+    const orderCards = document.querySelectorAll('.order-accordion');
+    orderCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('is-visible');
+        }, 150 * index); // Each card appears 150ms after the previous one
+    });
+});
+</script>
+</html>
+
+
+
+
+

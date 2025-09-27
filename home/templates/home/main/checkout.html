@@ -134,54 +134,20 @@
 
 
 </body>
+
 <script>
-    const form = document.querySelector("form"),
-    nextBtn = form.querySelector(".nextBtn"),
-    backBtn = form.querySelector(".backBtn"),
-    allInput = form.querySelectorAll(".first input");
-nextBtn.addEventListener("click", ()=> {
-allInput.forEach(input => {
-    if(input.value != ""){
-        form.classList.add('secActive');
-    }else{
-        form.classList.remove('secActive');
-    }
-})
-})
-backBtn.addEventListener("click", () => form.classList.remove('secActive'));
-</script>
-
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const nav = document.querySelector("nav");
-        const menuToggle = document.createElement("div");
-
-        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
-        menuToggle.classList.add("menu-toggle");
-
-        nav.parentNode.insertBefore(menuToggle, nav);
-
-        menuToggle.addEventListener("click", function () {
-            nav.classList.toggle("active");
-            menuToggle.classList.toggle("open");
-        });
-    });
-
-    function toggleMenu() {
-        document.querySelector('.menu-container').classList.toggle('active');
-    }
-
-var options = {
+    // This script configures and opens the Razorpay payment popup when the button is clicked.
+    var options = {
         "key": "{{ razorpay_key_id }}",
         "amount": "{{ amount }}",
         "currency": "INR",
         "name": "Second Chapter",
         "description": "Order Payment",
         "order_id": "{{ order_id }}",
-        "handler": function (response){
-            alert("Payment Successful!");
-            // You can redirect to order success page here
+        "callback_url": "{% url 'payment_success' %}", // This is the most important part for redirection
+        "prefill": {
+            "name": "{{ request.user.get_full_name|default:request.user.username }}",
+            "email": "{{ request.user.email }}"
         },
         "theme": {
             "color": "#3399cc"
@@ -189,13 +155,34 @@ var options = {
     };
 
     var rzp = new Razorpay(options);
+
+    // This attaches the payment popup to your button with the ID "rzp-button"
     document.getElementById('rzp-button').onclick = function(e){
         rzp.open();
         e.preventDefault();
     }
-
-
-
-
 </script>
+
+
+<script>
+    // This script creates and manages the hamburger menu for smaller screens.
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+
+        if (nav) {
+            const menuToggle = document.createElement("div");
+
+            menuToggle.innerHTML = `<span></span><span></span><span></span>`;
+            menuToggle.classList.add("menu-toggle");
+
+            nav.parentNode.insertBefore(menuToggle, nav);
+
+            menuToggle.addEventListener("click", function () {
+                nav.classList.toggle("active");
+                menuToggle.classList.toggle("open");
+            });
+        }
+    });
+</script>
+
 </html>
