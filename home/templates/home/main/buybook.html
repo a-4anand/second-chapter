@@ -6,119 +6,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Second Chapter - Buy & Sell Used Books</title>
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <style>
-       
+<style>
+/* Import a modern, readable font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+/* CSS Variables for easy theme customization */
+:root {
+    --font-family: 'Poppins', sans-serif;
+    --primary-color: #0056b3;      /* A professional, engaging blue */
+    --accent-color: #d90429;       /* A strong red for discounts/alerts */
+    --text-dark: #212529;         /* For titles and important text */
+    --text-light: #6c757d;        /* For secondary text like author names */
+    --background-color: #ffffff;
+    --border-color: #e0e0e0;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+}
 
-        .book-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
-            padding: 25px;
-           
-        }
-        
-        .book-card {
-            {% comment %} background: linear-gradient(135deg, #fff8e1, #e1c699); {% endcomment %}
-            background:white;
-            border-radius: 10px;
-            padding: 10px;
-            text-align: center;
-            width: 350px; /* Reduced width */
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            font-size: 14px; /* Slightly smaller font */
-        }
-        
-        .book-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .book-card img {
-            width: 100%;
-            height: 420px; /* Adjusted height */
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .book-card h3 {
-            margin: 8px 0;
-            font-size: 16px; /* Reduced size */
-        }
-        
-        .book-card p {
-            margin: 4px 0;
-            font-size: 13px;
-        }
-        
-        .out-of-stock {
-            color: red;
-            font-weight: bold;
-            margin-top: 5px;
-            font-size: 12px;
-        }
-        
-        .buy-now, .add-to-cart {
-            background-color: #a87f3a;
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 3px;
-        }
-        .buy-now {
-            background-color: #27ae60;
-            color: white;
-        }
+/* The main grid container for all book cards */
+.book-container {
+    display: grid;
+    /* Create responsive columns: they will be at least 280px wide, and the browser will fit as many as it can */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px; /* Space between cards */
+    padding: 32px;
+    font-family: var(--font-family);
+}
 
-        .buy-now:hover {
-            background-color: #219150;
-        }
+/* THE BOOK CARD */
+.book-card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Keeps child elements (like the image) within the rounded corners */
+}
 
-        .add-to-cart {
-            background-color: #3498db;
-            color: white;
-        }
+.book-card:hover {
+    transform: translateY(-8px); /* Subtle lift effect on hover */
+    box-shadow: var(--card-shadow-hover);
+}
 
-        .add-to-cart:hover {
-            background-color: #2980b9;
-        }
+/* --- Card Image Section --- */
+.book-card__image-container {
+    position: relative; /* Needed to position the discount badge */
+}
 
-        
-        .book-description {
-            display: block;
-            margin-top: 5px;
-            font-size: 12px;
-            transition: max-height 0.3s ease-out;
-        }
+.book-card__image {
+    width: 100%;
+    aspect-ratio: 3 / 4; /* Ensures all images have a consistent, book-like shape */
+    object-fit: cover;   /* Prevents images from stretching */
+    display: block;      /* Removes extra space below the image */
+}
 
-        .discount{
-            color:rgb(255, 38, 0);
-            font-weight:bold;
-            font-size:2.5vh;
+.book-card__discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
 
-        }
-        
-        .see-more {
-            background-color:rgb(30, 106, 43);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin: 3px;
-        }
-        
-        .see-more:hover {
-            background-color:rgb(11, 183, 20);
-        }
-    </style>
+/* --- Card Content Section --- */
+.book-card__content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* This makes the content area fill the space, pushing the buttons to the bottom */
+}
+
+.book-card__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0 0 4px 0;
+    /* Truncate long titles to 2 lines to maintain a uniform grid */
+    line-height: 1.4;
+    height: 2.8em; /* 1.4 (line-height) * 2 (lines) */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.book-card__author {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 0 0 12px 0;
+}
+
+.book-card__pricing {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: auto; /* Pushes pricing to the bottom of the content area, above actions */
+}
+
+.book-card__price--current {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.book-card__price--original {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+/* --- Card Actions Section --- */
+.book-card__actions {
+    padding: 0 16px 16px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns for the buttons */
+    gap: 10px;
+}
+
+/* Generic Button Styles */
+.btn {
+    display: inline-block;
+    width: 80%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn--primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn--primary:hover {
+    background-color: #00418a; /* Darker shade of primary */
+    transform: scale(1.03);
+}
+
+.btn--secondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn--secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: scale(1.03);
+}
+
+/* --- Out of Stock Status --- */
+.book-card__stock-status--out {
+    grid-column: 1 / -1; /* Makes the message span the full width of the action area */
+    font-weight: 600;
+    color: var(--accent-color);
+    text-align: center;
+    padding: 10px;
+    background-color: #fee2e2;
+    border-radius: 8px;
+    margin: 0;
+}</style>
 
 </head>
 <body>
@@ -159,61 +220,72 @@
 
 <div class="book-container">
 
-    {% for book in books %}
-    <div class="book-card">
-        <img src="{{ book.cover_image.url }}" alt="{{ book.title }}">
-        <h3>{{ book.title }}</h3>
-        <p><del>MRP: ₹{{ book.mrp }}</del></p>
-        <p><strong>Discounted Price: ₹{{ book.discounted_price }}</strong></p>
-        <p style="text-align: center; color:red ;font-size:25px;">{{ book.discount_percentage }}% off</p>
-        
-        <div class="extra-details" style="display: none;">
-            {% if book.author %}
-                <p><strong>Author:</strong> {{ book.author }}</p>
-            {% endif %}
-            
-            <p><strong>Category:</strong> {{ book.category }}</p>
-            <p><strong>Condition:</strong> {{ book.condition }}</p>
-            <p><strong>{{ book.description|default:"No description available" }}</strong></p>
+{% for book in books %}
+<div class="book-card">
+    <div class="book-card__image-container">
+        <img class="book-card__image" src="{{ book.cover_image.url }}" alt="Cover of {{ book.title }}">
+        <span class="book-card__discount-badge">{{ book.discount_percentage }}% OFF</span>
+    </div>
+
+    <div class="book-card__content">
+        <h3 class="book-card__title">{{ book.title }}</h3>
+        <p class="book-card__author">by {{ book.author|default:"Unknown Author" }}</p>
+        <div class="book-card__pricing">
+            <span class="book-card__price--current">₹{{ book.discounted_price }}</span>
+            <span class="book-card__price--original">₹{{ book.mrp }}</span>
         </div>
+    </div>
 
-        <button class="see-more" onclick="toggleDetails(this)">See More</button>
-
+    <div class="book-card__actions">
         {% if book.is_in_stock %}
-        <a href="{% url 'OrderItem' book.id %}" class="add-to-cart">Add to Cart</a>
-            <a href="#" class="buy-now">Buy Now</a>
-          
+            <a href="{% url 'OrderItem' book.id %}" class="btn btn--secondary">Add to Cart</a>
+            <a href="#" class="btn btn--primary">Buy Now</a>
         {% else %}
-            <p class="out-of-stock">Out of Stock</p>
-           
+            <p class="book-card__stock-status--out">Out of Stock</p>
         {% endif %}
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 </div>
 
 
 
 <div class="shop-category-section">
-    <h2>Shop by category</h2>
+    <h2 class="section-title">Shop by Category</h2>
     <div class="category-container">
-        <div class="category-card">
-            <a href="{% url 'academic' %}" class="category-link">
-            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks">
-            <h3>ACADEMIC & TEXTBOOKS</h3>
-                <p>Find affordable school, college, and reference books</p></a>
-        </div>
-        <div class="category-card">
-             <a href="{% url 'novels' %}" class="category-link">
-            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels">
-            <h3>FICTION & NOVELS</h3>
-                 <p>Explore bestsellers, classics, and contemporary reads.</p></a>
-        </div>
-        <div class="category-card">
-            <a href="{% url 'personaldevelopment' %}" class="category-link">
-            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles">
-            <h3>Personal Developments</h3>
-                <p>Develop Your Personal Growth with Personal Development Books.</p></a>
-        </div>
+
+        <a href="{% url 'academic' %}" class="category-card">
+            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Academic & Textbooks</h3>
+                <p class="category-card__description">Find affordable school, college, and reference books.</p>
+            </div>
+        </a>
+
+        <a href="{% url 'novels' %}" class="category-card">
+            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Fiction & Novels</h3>
+                <p class="category-card__description">Explore bestsellers, classics, and contemporary reads.</p>
+            </div>
+        </a>
+
+        <a href="{% url 'personaldevelopment' %}" class="category-card">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Personal Development" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Personal Development</h3>
+                <p class="category-card__description">Grow with our collection of self-improvement books.</p>
+            </div>
+        </a>
+
+        <a href="{% url 'personaldevelopment' %}" class="category-card">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Personal Development" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Mix</h3>
+                <p class="category-card__description">Grow with our collection of self-improvement books.</p>
+            </div>
+        </a>
+
     </div>
 </div>
 

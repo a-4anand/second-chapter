@@ -56,32 +56,45 @@
         </div>
     </div>
 
-    <div class="shop-category-section">
-        <h2>Shop by category</h2>
-        <div class="category-container">
-            <div class="category-card">
-                <a href="{% url 'academic' %}" class="category-link">
-                    <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks" loading="lazy" decoding="async">
-                    <h3>ACADEMIC & TEXTBOOKS</h3>
-                    <p>Find affordable school, college, and reference books</p>
-                </a>
+<div class="shop-category-section">
+    <h2 class="section-title">Shop by Category</h2>
+    <div class="category-container">
+
+        <a href="{% url 'academic' %}" class="category-card">
+            <img src="{% static 'assets/img/textbooks.jpg' %}" alt="Academic & Textbooks" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Academic & Textbooks</h3>
+                <p class="category-card__description">Find affordable school, college, and reference books.</p>
             </div>
-            <div class="category-card">
-                <a href="{% url 'novels' %}" class="category-link">
-                    <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels" loading="lazy" decoding="async">
-                    <h3>FICTION & NOVELS</h3>
-                    <p>Explore bestsellers, classics, and contemporary reads.</p>
-                </a>
+        </a>
+
+        <a href="{% url 'novels' %}" class="category-card">
+            <img src="{% static 'assets/img/fiction&novels.jpg' %}" alt="Fiction & Novels" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Fiction & Novels</h3>
+                <p class="category-card__description">Explore bestsellers, classics, and contemporary reads.</p>
             </div>
-            <div class="category-card">
-                <a href="{% url 'personaldevelopment' %}" class="category-link">
-                    <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Rare & Collectibles" loading="lazy" decoding="async">
-                    <h3>Personal Developments</h3>
-                    <p>Develop Your Personal Growth with Personal Development Books.</p>
-                </a>
+        </a>
+
+        <a href="{% url 'personaldevelopment' %}" class="category-card">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Personal Development" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Personal Development</h3>
+                <p class="category-card__description">Grow with our collection of self-improvement books.</p>
             </div>
-        </div>
+        </a>
+
+        <a href="{% url 'personaldevelopment' %}" class="category-card">
+            <img src="{% static 'assets/img/rarebooks.jpg' %}" alt="Personal Development" class="category-card__image">
+            <div class="category-card__overlay">
+                <h3 class="category-card__title">Mix</h3>
+                <p class="category-card__description">Grow with our collection of self-improvement books.</p>
+            </div>
+        </a>
+
     </div>
+</div>
+
 
     <section class="about-section">
         <div class="about-container">
