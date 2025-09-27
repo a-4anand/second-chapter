@@ -5,124 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Second Chapter - Buy & Sell Used BooksSecond Chapter - Buy & Sell Used Books{% endblock %}</title>
-    
+
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <style>
-    /* Profile Container */
-.profile-container {
-    max-width: 600px;
-    margin: 50px auto;
-    margin-top: 150px;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-}
-
-/* Profile Header */
-.profile-header {
-    margin-bottom: 20px;
-}
-
-.profile-avatar img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 4px solid #ff5733;
-    object-fit: cover;
-}
-
-.profile-username {
-    font-size: 2rem;
-    color: #333;
-    margin: 10px 0 5px;
-}
-
-.profile-bio {
-    font-size: 1rem;
-    color: #777;
-    margin: 0;
-}
-
-/* Profile Details */
-.profile-details {
-    margin: 20px 0;
-    text-align: left;
-}
-
-.detail-item {
-    margin: 15px 0;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.detail-label {
-    font-weight: bold;
-    color: #555;
-}
-
-.detail-value {
-    color: #333;
-}
-
-/* Profile Actions */
-.profile-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-.edit-profile {
-    background: #ff5733;
-    color: #fff;
-}
-
-.change-password {
-    background: #333;
-    color: #fff;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    .profile-container {
-        margin: 20px;
-        padding: 15px;
+<style>
+    /* Simple styling for the form container */
+    .form-container {
+        max-width: 600px;
+        margin: 150px auto 50px auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
-
-    .profile-username {
-        font-size: 1.5rem;
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
     }
-
-    .profile-bio {
-        font-size: 0.9rem;
+    .form-container .form-label {
+        font-weight: bold;
     }
-
-    .btn {
-        font-size: 0.9rem;
-        padding: 8px 16px;
+    .form-container .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
     }
-}
 </style>
 
 </head>
@@ -134,91 +40,79 @@
 
         <nav>
             <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
-        
+
             <div class="nav-divider"></div>
-        
+
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'register' %}">Register</a>
-        
+
             <div class="nav-divider"></div>
-        
+
             <a href="{% url 'buybooks' %}">Buy Books</a>
             <a href="{% url 'sellbooks' %}">Sell Books</a>
             <a href="#about">About</a>
             <a href="{% url 'contact' %}">Contact</a>
-        
+
             <div class="nav-divider"></div>
-        
+
             <a href="{% url 'profile' %}">View Profile</a>
             <a href="{% url 'cart' %}">Your Cart</a>
             <a href="#">Settings</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
-        
-        
-        
+
+
+
     </header>
+</div>
+<div class="form-container">
+    <h2>Edit Your Address</h2>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
 
-<div class="container-fluid">
-    
-
-
-<div class="profile-container">
-       {% if user.is_authenticated %}
-    <div class="profile-header">
-        <div class="profile-avatar">
-
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            {{ form.full_name }}
         </div>
-
-        <h1 class="profile-username">{{user.username}}</h1>
-        <p class="profile-bio">Book Lover | Avid Reader | Always Exploring New Stories</p>
-    </div>
-
-    <div class="profile-details">
-        
-        <div class="detail-item">
-            <span class="detail-label">Member Since :</span>
-            <span class="detail-value">{{user.date_joined}}</span>
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            {{ form.phone_number }}
         </div>
-        <div class="detail-item">
-            <span class="detail-label">Last_login:</span>
-            <span class="detail-value">{{user.last_login}}</span>
+        <div class="mb-3">
+            <label class="form-label">Street Address</label>
+            {{ form.street_address }}
         </div>
-
-        <div class="detail-item">
-    <span class="detail-label">Your Addresses</span>
-    <div class="detail-value" style="width: 60%; text-align: right;">
-        {% for address in addresses %}
-            <div class="address-entry" style="border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 10px;">
-                <p style="margin: 0;"><strong>{{ address.full_name }}</strong> ({{ address.address_type|title }})<br>{{ address.street_address }}, {{ address.city }}</p>
-
-                <a href="{% url 'edit_address' address.id %}" style="font-size: 0.8em; color: #ff5733;">Edit</a>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">City</label>
+                {{ form.city }}
             </div>
-        {% empty %}
-            <p>You have not added any addresses yet.</p>
-        {% endfor %}
-        <a href="{% url 'buy' %}" class="btn btn-sm btn-info mt-3">Add New Address</a>
-    </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">State</label>
+                {{ form.state }}
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Postal Code</label>
+            {{ form.postal_code }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Landmark (Optional)</label>
+            {{ form.landmark }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Address Type</label>
+            {{ form.address_type }}
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
 </div>
-
-    <div class="profile-actions">
-        <button class="btn edit-profile" onclick="window.location.href='{% url 'logout' %}'">
-            Log out
-        </button>
-        <button class="btn change-password" onclick="window.location.href='{% url 'password_reset' %}'">
-            Change Password
-        </button>
-        
-    </div>
-           {% else %}
-            <h2 style="color: black">Please Login</h2>
-
-    {% endif %}
-</div>
-
-</div>
-
 
 
 <section class="about-section" >
@@ -235,15 +129,15 @@
             </div>
         </div>
 </section>
-    
-    
+
+
 <footer class="footer">
         <div class="footer-container">
             <div class="footer-about">
                 <h3>Second Chapter</h3>
                 <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
             </div>
-            
+
             <div class="footer-links">
                 <h4>Quick Links</h4>
                 <ul>
@@ -256,9 +150,9 @@
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                     <li><a href="#">Settings</a></li>
                 </ul>
-                
+
             </div>
-            
+
             <div class="footer-contact">
                 <h4>Contact Us</h4>
                 <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
@@ -266,13 +160,13 @@
                 <p>Location: Pune, India</p>
             </div>
         </div>
-    
+
         <div class="footer-bottom">
             <p>&copy; 2024 Second Chapter. All rights reserved.</p>
         </div>
 </footer>
-    
-    
+
+
 </body>
 <script>
     const form = document.querySelector("form"),
@@ -294,18 +188,18 @@ backBtn.addEventListener("click", () => form.classList.remove('secActive'));
     document.addEventListener("DOMContentLoaded", function () {
         const nav = document.querySelector("nav");
         const menuToggle = document.createElement("div");
-    
-        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
         menuToggle.classList.add("menu-toggle");
-    
+
         nav.parentNode.insertBefore(menuToggle, nav);
-    
+
         menuToggle.addEventListener("click", function () {
             nav.classList.toggle("active");
             menuToggle.classList.toggle("open");
         });
     });
-    
+
     function toggleMenu() {
         document.querySelector('.menu-container').classList.toggle('active');
     }

@@ -598,3 +598,27 @@ def send_customer_order_confirmation(order):
         settings.DEFAULT_FROM_EMAIL,
         [order.user.email]  # <-- This sends the email to the customer
     )
+
+from .forms import AddressForm
+
+@login_required
+def edit_address(request, address_id):
+    # Fetch the specific address belonging to the current user, or return a 404 error
+    address = get_object_or_404(Address, id=address_id, user=request.user)
+
+    if request.method == 'POST':
+        # Populate the form with submitted data AND the instance we're updating
+        form = AddressForm(request.POST, instance=address)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your address has been updated successfully!')
+            return redirect('profile')
+    else:
+        # For a GET request, populate the form with the existing address data
+        form = AddressForm(instance=address)
+
+    context = {
+        'form': form,
+        'address': address
+    }
+    return render(request, 'home/main/edit_address.html', context)
