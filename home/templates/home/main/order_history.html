@@ -259,11 +259,7 @@
         <h2>My Order History</h2>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+   
 
     {% if orders %}
         {% for order in orders %}

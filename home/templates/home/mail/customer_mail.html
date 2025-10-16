@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+
+        <div style="background-color: #4A5568; padding: 20px; text-align: center;">
+            <img src="YOUR_LOGO_URL" alt="The Second Chapter Logo" style="max-width: 180px;">
+        </div>
+
+        <div style="padding: 30px;">
+            <h1 style="font-size: 24px; color: #2D3748; margin-top: 0;">Thanks for your order, {{ order.user.username }}!</h1>
+            <p style="font-size: 16px; color: #4A5568; line-height: 1.5;">
+                We've received it and are getting it ready for you. 📚 We'll let you know as soon as it has shipped.
+            </p>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="YOUR_WEBSITE_ORDER_URL/{{ order.razorpay_order_id }}" style="background-color: #3182CE; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Your Order</a>
+            </div>
+
+            <h2 style="font-size: 20px; color: #2D3748; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; margin-top: 30px;">Order Summary</h2>
+            <p style="font-size: 16px; color: #4A5568;"><strong>Order ID:</strong> {{ order.razorpay_order_id }}</p>
+            <p style="font-size: 16px; color: #4A5568;"><strong>Total Paid:</strong> ₹{{ order.total_amount }}</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ddd; color: #718096;">Item</th>
+                        <th style="text-align: right; padding: 8px; border-bottom: 1px solid #ddd; color: #718096;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td style="padding: 12px 8px; border-bottom: 1px solid #E2E8F0;">{{ item.item.title }}</td>
+                        <td style="text-align: right; padding: 12px 8px; border-bottom: 1px solid #E2E8F0;">₹{{ item.item.discounted_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2 style="font-size: 20px; color: #2D3748; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; margin-top: 30px;">Shipping To</h2>
+            <div style="font-size: 16px; color: #4A5568; line-height: 1.6;">
+                {{ order.shipping_address.full_name }}<br>
+                {{ order.shipping_address.street_address }}<br>
+                {{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.postal_code }}<br>
+                <strong>Phone:</strong> {{ order.shipping_address.phone_number }}
+            </div>
+        </div>
+
+        <div style="background-color: #EDF2F7; padding: 20px; text-align: center; font-size: 12px; color: #718096;">
+            <p>Thanks again from the whole team!</p>
+            <p>&copy; {% now "Y" %} The Second Chapter. All rights reserved.</p>
+            </div>
+    </div>
+
+</body>
+</html>

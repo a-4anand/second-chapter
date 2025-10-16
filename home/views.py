@@ -16,6 +16,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 import os
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
+from django.utils.html import strip_tags
+from django.conf import settings
+
+
+
+
 razorpay_key_id = os.getenv('RAZORPAY_KEY_ID')
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
 def home(request):
@@ -480,7 +488,7 @@ def send_admin_order_notification(order):
     )
 
 
-@csrf_exempt
+
 @csrf_exempt
 def payment_success(request):
     if request.method == "POST":
@@ -554,50 +562,30 @@ def order_history(request):
 
 
 def send_customer_order_confirmation(order):
-    """Sends an order confirmation email to the customer."""
+    """Sends a professional HTML order confirmation email to the customer."""
     subject = f"Your Second Chapter Order #{order.razorpay_order_id} is Confirmed!"
-    items_list = "\n".join([f"- {item.item.title} (₹{item.item.discounted_price})" for item in order.items.all()])
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to_email = [order.user.email]
 
-    if order.shipping_address:
-        address_details = f"""
-        {order.shipping_address.full_name}
-        {order.shipping_address.street_address}
-        {order.shipping_address.city}, {order.shipping_address.state} - {order.shipping_address.postal_code}
-        Phone: {order.shipping_address.phone_number}
-        """
-    else:
-        address_details = "No shipping address provided."
+    context = {
+        'order': order,
+    }
 
-    message = f"""
-    Hi {order.user.username},
+    html_template = loader.get_template('home/mail/customer_mail.html')
+    html_content = html_template.render(context)
+    text_content = strip_tags(html_content)
 
-    Thank you for your order! We've received it and are getting it ready for you. 📚
-
-    Order Summary:
-    ----------------
-    Order ID: {order.razorpay_order_id}
-    Total Amount Paid: ₹{order.total_amount}
-    Order Date: {order.ordered_date.strftime('%Y-%m-%d %H:%M')}
-
-    Items Ordered:
-    ----------------
-    {items_list}
-
-    Shipping To:
-    ----------------
-    {address_details}
-
-    We'll notify you again once your order has shipped.
-
-    Thanks,
-    The Second Chapter Team
-    """
-    send_mail(
+    email = EmailMultiAlternatives(
         subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [order.user.email]  # <-- This sends the email to the customer
+        text_content,
+        from_email,
+        to_email
     )
+
+    # ✅ FIXED: Changed the second argument to the correct MIME type.
+    email.attach_alternative(html_content, "text/html")
+
+    email.send()
 
 from .forms import AddressForm
 

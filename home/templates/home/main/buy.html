@@ -4,246 +4,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Second Chapter - Buy & Sell Used Books</title>
+    <title>Select Shipping Address - Second Chapter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
     <style>
-        .form-group {
-    margin-bottom: 15px;
-}
+        body {
+            /* Using a neutral background that works with most themes */
+            background-color: #f7fafc;
+        }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
+        .checkout-address-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a5568;
+        }
 
-input, select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+        .checkout-address-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-.btn {
-    background-color: #4A90E2;
-    color: white;
-    padding: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .checkout-address-header h2 {
+            font-size: 2.25rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .checkout-address-grid {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .checkout-address-selection {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .checkout-address-form-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Using a unique class for the heading to avoid conflicts */
+        .checkout-address-subheading {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .checkout-address-card-label {
+            display: block;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .checkout-address-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .checkout-address-card:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .checkout-address-card strong {
+            color: #2d3748;
+            font-size: 1rem;
+        }
+
+        .checkout-address-card .checkout-address-type {
+            background-color: #edf2f7;
+            color: #718096;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .checkout-address-card-content {
+            font-size: 0.9rem;
+            color: #718096;
+            line-height: 1.6;
+            padding-left: 30px;
+        }
+
+        /* Hiding the default radio button */
+        .checkout-address-container input[type="radio"] {
+            display: none;
+        }
+
+        .checkout-address-card::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 45%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e0;
+            border-radius: 50%;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .checkout-address-card::after {
+            content: '';
+            position: absolute;
+            left: 25px;
+            top: 45%;
+            transform: translateY(-50%) scale(0);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #3182CE;
+            transition: all 0.2s ease;
+        }
+
+        .checkout-address-container input[type="radio"]:checked + .checkout-address-card-label .checkout-address-card {
+            border-color: #3182CE;
+            background-color: #ebf8ff;
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+        }
+
+        .checkout-address-container input[type="radio"]:checked + .checkout-address-card-label .checkout-address-card::before {
+            border-color: #3182CE;
+        }
+
+        .checkout-address-container input[type="radio"]:checked + .checkout-address-card-label .checkout-address-card::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .checkout-address-form-group {
+            margin-bottom: 20px;
+        }
+
+        .checkout-address-form-group label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #4a5568;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .checkout-address-form-group input,
+        .checkout-address-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            background-color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+
+        .checkout-address-form-group input:focus,
+        .checkout-address-form-group select:focus {
+            outline: none;
+            border-color: #3182CE;
+            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.2);
+        }
+
+        .checkout-address-accordion-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-address-accordion-toggle:hover {
+            background-color: #fdfdfe;
+        }
+
+        .checkout-address-accordion-toggle span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .checkout-address-accordion-toggle .icon::before {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #3182CE;
+        }
+
+        .checkout-address-accordion-content {
+            display: none;
+            padding: 25px;
+            background-color: #fff;
+            border: 2px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            margin-top: -8px;
+        }
+
+        .checkout-address-accordion.active .checkout-address-accordion-toggle {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .checkout-address-accordion.active .checkout-address-accordion-content {
+            display: block;
+        }
+
+        .checkout-address-accordion.active .checkout-address-accordion-toggle .icon::before {
+            content: '−';
+        }
+
+        .checkout-address-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .checkout-address-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .checkout-address-btn-primary {
+            background-color: #3182CE;
+            color: white;
+            width: 100%;
+        }
+
+        .checkout-address-btn-primary:hover {
+            background-color: #2b6cb0;
+        }
+
+        .checkout-address-final-action {
+            text-align: center;
+            margin-top: 40px;
+        }
 
     </style>
-
 </head>
 <body>
 
-    <header>
+    <header style="border-bottom: 1px solid #e2e8f0; padding: 15px 30px; background-color: #fff;">
         <div class="logo">
-            <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+            <a href="{% url 'home' %}"><img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo" style="height: 40px;"></a>
         </div>
-
-        <nav>
-            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
-
-            <div class="nav-divider"></div>
-
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
-
-            <div class="nav-divider"></div>
-
-            <a href="{% url 'buybooks' %}">Buy Books</a>
-            <a href="{% url 'sellbooks' %}">Sell Books</a>
-            <a href="#about">About</a>
-            <a href="{% url 'contact' %}">Contact</a>
-
-            <div class="nav-divider"></div>
-
-            <a href="{% url 'profile' %}">View Profile</a>
-            <a href="{% url 'cart' %}">Your Cart</a>
-            <a href="#">Settings</a>
-            <a href="{% url 'logout' %}">Logout</a>
-        </nav>
-
-
-
     </header>
 
-<div class="container my-5">
-    <h2>Select Shipping Address</h2>
-    <hr>
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Your Saved Addresses</h4>
-            {% if addresses %}
-                <form method="POST" action="{% url 'buy' %}">
-                    {% csrf_token %}
-                    {% for address in addresses %}
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="selected_address" id="address{{ address.id }}" value="{{ address.id }}" required>
-                                    <label class="form-check-label" for="address{{ address.id }}">
-                                        <strong>{{ address.full_name }}</strong> ({{ address.address_type|title }})<br>
-                                        {{ address.street_address }}, {{ address.landmark }}<br>
+    <div class="checkout-address-container">
+        <div class="checkout-address-header">
+            <h2>Select Shipping Address</h2>
+        </div>
+
+        <form method="POST" action="{% url 'buy' %}">
+            {% csrf_token %}
+
+            <div class="checkout-address-grid">
+
+                <div class="checkout-address-selection">
+                    <h4 class="checkout-address-subheading">Your Saved Addresses</h4>
+                    {% if addresses %}
+                        {% for address in addresses %}
+                            <input type="radio" name="selected_address" id="address{{ address.id }}" value="{{ address.id }}">
+                            <label for="address{{ address.id }}" class="checkout-address-card-label">
+                                <div class="checkout-address-card">
+                                    <div class="checkout-address-card-content">
+                                        <strong>{{ address.full_name }}</strong>
+                                        <span class="checkout-address-type">{{ address.address_type|title }}</span><br>
+                                        {{ address.street_address }}{% if address.landmark %}, {{ address.landmark }}{% endif %}<br>
                                         {{ address.city }}, {{ address.state }} - {{ address.postal_code }}<br>
-                                        Phone: {{ address.phone_number }}
-                                    </label>
+                                        <strong>Phone:</strong> {{ address.phone_number }}
+                                    </div>
                                 </div>
+                            </label>
+                        {% endfor %}
+                    {% else %}
+                        <p>You don't have any saved addresses. Please add one below.</p>
+                    {% endif %}
+                </div>
+
+                <div class="checkout-address-form-container">
+                    <div class="checkout-address-accordion">
+                        <div class="checkout-address-accordion-toggle">
+                            <span>Add a New Address</span>
+                            <span class="icon"></span>
+                        </div>
+                        <div class="checkout-address-accordion-content">
+                            <div class="checkout-address-form-group">
+                                <label for="full_name">Full Name</label>
+                                <input type="text" id="full_name" name="full_name">
+                            </div>
+                            <div class="checkout-address-form-group">
+                                <label for="phone_number">Phone Number</label>
+                                <input type="text" id="phone_number" name="phone_number">
+                            </div>
+                            <div class="checkout-address-form-group">
+                                <label for="street_address">Street Address</label>
+                                <input type="text" id="street_address" name="street_address">
+                            </div>
+                             <div class="checkout-address-form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city">
+                            </div>
+                             <div class="checkout-address-form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" name="state">
+                            </div>
+                             <div class="checkout-address-form-group">
+                                <label for="postal_code">Postal Code</label>
+                                <input type="text" id="postal_code" name="postal_code">
+                            </div>
+                             <div class="checkout-address-form-group">
+                                <label for="landmark">Landmark (Optional)</label>
+                                <input type="text" id="landmark" name="landmark">
+                            </div>
+                             <div class="checkout-address-form-group">
+                                <label for="address_type">Address Type</label>
+                                <select id="address_type" name="address_type">
+                                    <option value="home">Home</option>
+                                    <option value="work">Work</option>
+                                </select>
                             </div>
                         </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-primary">Use this Address & Proceed to Pay</button>
-                </form>
-            {% else %}
-                <p>You have no saved addresses. Please add one to continue.</p>
-            {% endif %}
-        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="col-md-6">
-            <h4>Add a New Address</h4>
-            <form method="POST" action="{% url 'buy' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="full_name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="full_name" name="full_name" required>
-                </div>
-                <div class="mb-3">
-                    <label for="phone_number" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
-                </div>
-                <div class="mb-3">
-                    <label for="street_address" class="form-label">Street Address</label>
-                    <input type="text" class="form-control" id="street_address" name="street_address" required>
-                </div>
-                 <div class="mb-3">
-                    <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" name="city" required>
-                </div>
-                 <div class="mb-3">
-                    <label for="state" class="form-label">State</label>
-                    <input type="text" class="form-control" id="state" name="state" required>
-                </div>
-                 <div class="mb-3">
-                    <label for="postal_code" class="form-label">Postal Code</label>
-                    <input type="text" class="form-control" id="postal_code" name="postal_code" required>
-                </div>
-                 <div class="mb-3">
-                    <label for="landmark" class="form-label">Landmark (Optional)</label>
-                    <input type="text" class="form-control" id="landmark" name="landmark">
-                </div>
-                 <div class="mb-3">
-                    <label for="address_type" class="form-label">Address Type</label>
-                    <select class="form-select" id="address_type" name="address_type">
-                        <option value="home">Home</option>
-                        <option value="work">Work</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success">Save and Proceed to Pay</button>
-            </form>
-        </div>
+            <div class="checkout-address-final-action">
+                <button type="submit" class="checkout-address-btn checkout-address-btn-primary">Proceed to Payment</button>
+            </div>
+
+        </form>
     </div>
-</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <section class="about-section" >
-        <div class="about-container">
-            <div class="about-text">
-                <h2>About Second Chapter</h2>
-                <p>Second Chapter is a Pune-based startup founded by Anand Dubey. This platform is created especially for bibliophiles who love to read but find it costly to buy new books frequently.</p>
-                <p>We believe that a single use does not diminish a book's value. That’s why we buy and sell used books, making reading more affordable and sustainable.</p>
-                <p>Unlike other platforms where selling used books yields almost nothing, we offer up to <strong>80% of the MRP</strong> based on the book’s condition. Our books are available at a discounted price ranging from <strong>6% to 50% of the MRP</strong>, making it easy for readers to own more books at a fraction of the cost.</p>
-                <p>To enhance customer convenience, we offer <strong>free delivery</strong> on bulk orders and provide <strong>same-day delivery</strong> within Pune.</p>
-            </div>
-            <div class="about-image">
-                <img src="{% static 'assets/img/freepik__a-happy-poor-kid-with-books__47838.jpeg' %}" alt="Second Chapter - Used Books">
-            </div>
-        </div>
-    </section>
     <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-about">
-                <h3>Second Chapter</h3>
-                <p>We buy and sell used books at affordable prices, making reading accessible to everyone. Get up to 80% of MRP when selling, and purchase books at discounts ranging from 6% to 50% of MRP.</p>
-            </div>
+        </footer>
 
-            <div class="footer-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="{% url 'home' %}">Home</a></li>
-                    <li><a href="{% url 'login' %}">Login</a></li>
-                    <li><a href="{% url 'buybooks' %}">Buy Books</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="{% url 'contact' %}">Contact</a></li>
-                    <li><a href="{% url 'profile' %}">View Profile</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                    <li><a href="#">Settings</a></li>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Updated selectors to use unique class names
+            const accordionToggle = document.querySelector(".checkout-address-accordion-toggle");
+            const accordion = document.querySelector(".checkout-address-accordion");
 
-                </ul>
+            if (accordionToggle && accordion) {
+                accordionToggle.addEventListener("click", function () {
+                    accordion.classList.toggle("active");
 
-            </div>
+                    const selectedRadio = document.querySelector('input[name="selected_address"]:checked');
+                    if (selectedRadio) {
+                        selectedRadio.checked = false;
+                    }
+                });
+            }
 
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>Email: <a href="mailto:support@secondchapter.com">support@secondchapter.com</a></p>
-                <p>Phone: <a href="tel:+91XXXXXXXXXX">+91 XXXXXXXXXX</a></p>
-                <p>Location: Pune, India</p>
-            </div>
-        </div>
+            {% if not addresses %}
+                if (accordion) {
+                    accordion.classList.add("active");
+                }
+            {% endif %}
 
-        <div class="footer-bottom">
-            <p>&copy; 2024 Second Chapter. All rights reserved.</p>
-        </div>
-    </footer>
-
-
+            const addressLabels = document.querySelectorAll('.checkout-address-card-label');
+            addressLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    if (accordion && accordion.classList.contains('active')) {
+                        accordion.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
-
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const nav = document.querySelector("nav");
-        const menuToggle = document.querySelector(".menu-toggle");
-
-        menuToggle.addEventListener("click", function () {
-            nav.classList.toggle("active");
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const nav = document.querySelector("nav");
-        const menuToggle = document.createElement("div");
-
-        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
-        menuToggle.classList.add("menu-toggle");
-
-        nav.parentNode.insertBefore(menuToggle, nav);
-
-        menuToggle.addEventListener("click", function () {
-            nav.classList.toggle("active");
-            menuToggle.classList.toggle("open");
-        });
-    });
-
-
-    function toggleMenu() {
-        document.querySelector('.menu-container').classList.toggle('active');
-    }
-
-
-</script>
 </html>

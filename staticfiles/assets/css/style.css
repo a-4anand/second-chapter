@@ -5,109 +5,68 @@
 /* Stylish Menu Toggle Button */
 
 
-nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
-
-.nav-divider {
-    width: 1px;
-    height: 20px;
-    background-color: #ccc;
-}
-
-/* Hide the menu toggle on larger screens */
-.menu-toggle {
-    display: none;
-}
-/* --- Desktop Navigation Styles --- */
+/* Default styling for navigation */
 nav {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-}
-
-/* --- MOBILE STYLES (Screen width 768px or less) --- */
-@media (max-width: 768px) {
-
-    /* --- Hamburger Menu Icon (.menu-toggle) --- */
-    .menu-toggle {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        width: 30px;
-        height: 25px;
-        cursor: pointer;
-        z-index: 1001; /* Ensure it's above the nav panel */
-    }
-
-    .menu-toggle span {
-        width: 100%;
-        height: 3px;
-        background-color: #333;
-        border-radius: 3px;
-        transition: all 0.3s ease-in-out;
-    }
-
-    /* --- Hamburger to "X" Animation --- */
-    .menu-toggle.open span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .menu-toggle.open span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.open span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -7px);
-    }
-
-    /* --- Navigation Panel Styling --- */
-    nav {
-    /* Basic Layout & Positioning */
-    position: fixed;
+    display: flex; /* Always flex */
+    flex-direction: column;
+    background: rgba(12, 12, 11, 0.9); /* Slightly less transparent */
+    backdrop-filter: blur(10px);
+    position: fixed; /* Use fixed positioning for overlays */
     top: 0;
     right: 0;
+    width: 250px;
     height: 100vh;
-    width: 280px; /* Width of the slide-out menu */
-    background-color: white;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-    z-index: 1000;
-
-    /* Flexbox for vertical alignment */
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-top: 80px;
-    gap: 25px;
-    padding-left: 20px;
-
-    /* --- THE ANIMATION --- */
-    /* 1. Initial State: Hidden off-screen to the right */
-    transform: translateX(100%);
-
-    /* 2. Transition: Makes the movement smooth */
-    /* I've increased the duration from 0.4s to 0.8s for a slower effect */
-    transition: transform 0.8s ease-in-out;
+    padding: 20px;
+    padding-top: 60px;
+    transform: translateX(100%); /* Start off-screen to the right */
+    visibility: hidden; /* Hide it from screen readers and interactions */
+    transition: transform 0.4s ease-in-out, visibility 0.4s ease-in-out;
+    z-index: 1001; /* Should be higher than the header */
 }
 
-    /* --- Active State (when menu is open) --- */
-    nav.active {
-        /* 3. Final State: Slides into view */
-        transform: translateX(0);
-    }
+nav.active {
+    transform: translateX(0); /* Move it on-screen */
+    visibility: visible; /* Make it visible */
+}
 
-    /* Hide dividers in mobile view */
-    .nav-divider {
-        display: none;
-    }
+nav a {
+    color: rgb(251, 250, 249);
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+
+}
+.nav-divider {
+    width: 70%;
+    height: 2px;
+
+    margin-right: 15%;
+    margin-left: 15%;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+nav a:hover {
+    background: #8a6214;
+    border-radius: 5px;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.menu-toggle span {
+    display: block;
+    background: rgb(8, 8, 8);
+    height: 5px;
+    width: 40px;
+    border-radius: 4px;
+    margin: 3px 0;
 }
 
 
@@ -118,6 +77,7 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to right, #f8f3e7, #d6b885);
     color: #333;
+
 }
 
 /* Header */
@@ -128,10 +88,12 @@ header {
     padding: 15px 5%;
     background: linear-gradient(to right, #f8f3e7, #d6b885);
     position: fixed;
-    width: 90%;
+    width: 100%; /* FIX: Should be 100% */
     top: 0;
+    left: 0; /* Add left: 0 for full alignment */
+    right: 0; /* Add right: 0 for full alignment */
     z-index: 1000;
- 
+    box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
 .logo img {
@@ -216,11 +178,12 @@ header {
     animation: slideInFromRight 1.5s ease-in-out;
 }
 
+/* In your style.css file */
 .hero-image img {
     width: 100%;
     max-width: 650px;
     margin-bottom: -100px;
-    margin-left: 150px;
+    margin-left: 0; /* FIX: Changed from 150px to 0 */
 }
 
 @keyframes slideInFromRight {
@@ -320,71 +283,110 @@ header {
 }
 
 /* Shopping Section */
+/* --- Shop by Category Section --- */
 .shop-category-section {
+    padding: 60px 5%; /* Vertical and horizontal padding */
     text-align: center;
-    padding: 50px 5%;
-    margin-top: 100px;
+    /* A very light grey to separate the section */
 }
 
-.shop-category-section h2 {
+.section-title {
     font-size: 2.5rem;
-    font-weight: bold;
-    color: #1d1d1d;
-    margin-bottom: 30px;
+    font-weight: 700;
+    color: var(--text-dark, #212529); /* Fallback color if variable isn't defined */
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Optional: Decorative underline for the title */
+.section-title::after {
+    content: '';
+    position: absolute;
+    width: 60%;
+    height: 4px;
+    background-color: var(--primary-color, #0056b3);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
 }
 
 .category-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: grid;
+    /* Responsive grid: columns are at least 300px wide, and the grid fits as many as possible */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    text-align: left; /* Reset parent's text-align for card content */
 }
 
-.card {
-    opacity: 0;
-    transform: translateX(-100%);
-    transition: transform 0.5s ease-out, opacity 0.4s ease-out;
-    /* Optional: Hint to the browser about upcoming changes */
-    will-change: transform, opacity;
-}
-
-.card.is-visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
+/* THE CATEGORY CARD */
 .category-card {
-    margin-top: 50px;
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    width: 25%;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
+    display: block; /* Gives the <a> tag block properties */
+    position: relative;
+    border-radius: var(--border-radius, 12px);
+    overflow: hidden; /* Crucial for the image zoom effect and rounded corners */
+    aspect-ratio: 4 / 5; /* A consistent vertical shape for all cards */
+    box-shadow: var(--card-shadow, 0 4px 12px rgba(0, 0, 0, 0.08));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* Removes the default underline from the link */
 }
 
 .category-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px); /* Lifts the card on hover */
+    box-shadow: var(--card-shadow-hover, 0 8px 24px rgba(0, 0, 0, 0.1));
 }
 
-.category-card img {
+.category-card__image {
     width: 100%;
-    border-radius: 10px;
-    height: 250px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the card without distortion */
+    transition: transform 0.4s ease;
 }
 
-.category-card h3 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 15px;
+/* Creates the zoom-in effect on the image when hovering over the card */
+.category-card:hover .category-card__image {
+    transform: scale(1.05);
 }
 
-.category-card p {
-    font-size: 1rem;
-    color: #555;
-    margin-top: 5px;
+.category-card__overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    color: white;
+    /* Gradient ensures text is readable over any image */
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.85) 100%);
+
+    /* Pushes text content to the bottom of the overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.category-card__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px 0;
+}
+
+.category-card__description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+    max-height: 0; /* Initially hide the description */
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+
+/* Reveals the description text on hover */
+.category-card:hover .category-card__description {
+    max-height: 100px; /* Animate to this height */
+    opacity: 1;
 }
 
 .shop-all-btn {
@@ -778,4 +780,6 @@ form .buttons button , .backBtn{
 }
 
 
-/*css for pop up*/
+
+/* ----------------css for resposnive js ------------------ */
+
