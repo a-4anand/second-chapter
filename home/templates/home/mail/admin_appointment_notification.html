@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Book Collection Appointment</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="color: #8a6214; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+            New Book Collection Appointment Request
+        </h2>
+        <p>A new appointment has been booked for book collection. Please review the details below and contact the seller to coordinate.</p>
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold; width: 150px;">Seller Name:</td>
+                <td style="padding: 10px;">{{ appointment.name }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Email:</td>
+                <td style="padding: 10px;">{{ appointment.email }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Phone Number:</td>
+                <td style="padding: 10px;">{{ appointment.phone }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Collection Address:</td>
+                <td style="padding: 10px;">{{ appointment.address }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Number of Books:</td>
+                <td style="padding: 10px;">{{ appointment.no_of_books }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Preferred Date:</td>
+                <td style="padding: 10px;">{{ appointment.preferred_date|date:"F d, Y" }}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px; font-weight: bold;">Preferred Time:</td>
+                <td style="padding: 10px;">{{ appointment.preferred_time }}</td>
+            </tr>
+            {% if appointment.book_image1 or appointment.book_image2 or appointment.book_image3 %}
+            <tr style="background-color: #f9f9f9;">
+    <td style="padding: 10px; font-weight: bold; vertical-align: top;">Book Images:</td>
+    <td style="padding: 10px;">
+        {% if appointment.book_image1 %}
+            <a href="{{ request.build_absolute_uri(appointment.book_image1.url) }}">View Image 1</a><br>
+        {% endif %}
+        {% if appointment.book_image2 %}
+            <a href="{{ request.build_absolute_uri(appointment.book_image2.url) }}">View Image 2</a><br>
+        {% endif %}
+        {% if appointment.book_image3 %}
+            <a href="{{ request.build_absolute_uri(appointment.book_image3.url) }}">View Image 3</a>
+        {% endif %}
+    </td>
+</tr>
+            {% endif %}
+        </table>
+
+        <p style="margin-top: 20px; font-size: 12px; color: #888;">
+            This email was sent automatically from the Second Chapter "Sell Books" form.
+        </p>
+    </div>
+</body>
+</html>

@@ -147,6 +147,140 @@
     </style>
 </head>
 <body>
+{% if messages %}
+<div class="toast-container">
+    {% for message in messages %}
+        <div class="custom-toast toast--{{ message.tags }}">
+            <div class="toast__icon">
+                {% if message.tags == 'success' %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                {% endif %}
+            </div>
+            <div class="toast__message">
+                {{ message }}
+            </div>
+            <button class="toast__close">&times;</button>
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .custom-toast {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 300px;
+        max-width: 450px;
+        color: #fff;
+        animation: slideDownFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    /* Color Variants */
+    .toast--success {
+        background-color: #333d29; /* A sophisticated dark olive green */
+    }
+
+    .toast--error, .toast--warning {
+        background-color: #78290f; /* A muted, deep red */
+    }
+
+    .toast__icon {
+        flex-shrink: 0;
+        margin-right: 15px;
+    }
+
+    .toast__icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .toast__message {
+        flex-grow: 1;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .toast__close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        margin-left: 20px;
+        transition: color 0.3s ease;
+    }
+
+    .toast__close:hover {
+        color: #fff;
+    }
+
+    /* Animation Keyframes */
+    @keyframes slideDownFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.custom-toast');
+
+        toasts.forEach((toast, index) => {
+            // Auto-dismiss after 5 seconds
+            const autoDismissTimer = setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.5s ease forwards';
+                setTimeout(() => toast.remove(), 500);
+            }, 5000 + (index * 500)); // Stagger dismissals slightly
+
+            // Manual close button
+            const closeButton = toast.querySelector('.toast__close');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    clearTimeout(autoDismissTimer); // Stop the auto-dismiss
+                    toast.style.animation = 'fadeOut 0.5s ease forwards';
+                    setTimeout(() => toast.remove(), 500);
+                });
+            }
+        });
+    });
+</script>
+{% endif %}
 
 <header>
     <div class="logo">
@@ -177,6 +311,8 @@
         {% endif %}
     </nav>
 </header>
+
+
 
     <section class="hero">
         <div class="hero-text">
@@ -333,6 +469,8 @@
         <div class="footer-bottom">
             <p>&copy; 2025 Second Chapter. All rights reserved.</p>
         </div>
+
+
 </footer>
 
 <script>

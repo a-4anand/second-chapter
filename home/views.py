@@ -303,16 +303,38 @@ def remove_from_cart(request, item_id):
     return redirect("cart")
 
 
+from django.template.exceptions import TemplateDoesNotExist, TemplateSyntaxError
+from smtplib import SMTPException
 
 
 def book_appointment(request):
     if request.method == "POST":
         form = AppointmentForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect("success")
+            appointment_instance = form.save()
+
+            try:
+                send_appointment_notification(request, appointment_instance)
+                messages.success(request, "Appointment booked! We'll contact you shortly to confirm the details.")
+
+            # ✅ BEST PRACTICE: Catch specific errors
+            except (TemplateDoesNotExist, TemplateSyntaxError) as e:
+                print(f"CRITICAL: Email template error for appointments: {e}")
+                messages.error(request,
+                               "Your appointment was booked, but there was a server error notifying the admin. We will still process it manually.")
+            except SMTPException as e:
+                print(f"CRITICAL: SMTP error for appointments: {e}")
+                messages.error(request,
+                               "Your appointment was booked, but the email notification failed to send. We will still get in touch.")
+            except Exception as e:
+                print(f"An unexpected error occurred sending appointment email: {e}")
+                messages.error(request,
+                               "Your appointment was booked, but we had an unexpected error. We will still get in touch.")
+
+            return redirect("sellbooks")
     else:
         form = AppointmentForm()
+
     return render(request, "home/main/addbook.html", {"form": form})
 
   # make sure Address is correctly imported
@@ -357,13 +379,30 @@ def checkout(request):
     return render(request, 'home/main/checkout.html', context)
 
 
-
 def contact_admin(request):
     if request.method == "POST":
-        form = ContactAdminForm(request.POST, request.FILES)
+        # Note: I removed request.FILES as a standard contact form doesn't upload files.
+        # If your form DOES have a file upload, add request.FILES back.
+        form = ContactAdminForm(request.POST)
         if form.is_valid():
-            form.save()
-            return HttpResponse("Message Sent")
+            # Save the form data to the database
+            contact_instance = form.save()
+
+            try:
+                # Send the formatted email to the admin
+                send_contact_admin_notification(contact_instance)
+
+                # ✅ This creates the "popup" message for the user
+                messages.success(request, "Your message has been sent successfully! We will get back to you shortly.")
+
+            except Exception as e:
+                # If email fails, log the error and notify the user
+                print(f"Error sending contact email: {e}")
+                messages.error(request,
+                               "We received your message, but there was an error sending a notification. Please try again later.")
+
+            # Redirect back to the contact page to display the message
+            return redirect('home')
     else:
         form = ContactAdminForm()
 
@@ -610,3 +649,54 @@ def edit_address(request, address_id):
         'address': address
     }
     return render(request, 'home/main/edit_address.html', context)
+
+
+def send_contact_admin_notification(contact_instance):
+    """Sends a formatted HTML email to the admin with contact form details."""
+    subject = f"New Contact Form Submission from {contact_instance.name}"
+
+    # Context to pass data to the email template
+    context = {
+        'name': contact_instance.name,
+        'email': contact_instance.email,
+        'phone': contact_instance.phone,
+        'message_text': contact_instance.message,
+    }
+
+    # Render the HTML template
+    html_template = loader.get_template('home/mail/admin_contact_notification.html')
+    html_content = html_template.render(context)
+    text_content = strip_tags(html_content)  # Fallback for non-HTML clients
+
+    # Create and send the email
+    email = EmailMultiAlternatives(
+        subject,
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.ADMIN_EMAIL]  # Sends to the admin's email
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+
+
+def send_appointment_notification(request, appointment_instance):
+    """Sends a formatted HTML email to the admin with appointment details."""
+    subject = f"New Book Collection Appointment from {appointment_instance.name}"
+
+    context = {
+        'appointment': appointment_instance,
+        'request': request,  # Pass the request to build absolute URLs for images
+    }
+
+    html_template = loader.get_template('home/mail/admin_appointment_notification.html')
+    html_content = html_template.render(context)
+    text_content = strip_tags(html_content)
+
+    email = EmailMultiAlternatives(
+        subject,
+        text_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.ADMIN_EMAIL]
+    )
+    email.attach_alternative(html_content, "text/html")
+    email.send()
