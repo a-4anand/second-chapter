@@ -32,6 +32,11 @@
     gap: 32px; /* Space between cards */
     padding: 32px;
     font-family: var(--font-family);
+
+    /* --- NEW --- */
+    /* Added to center the content on very large screens */
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 /* THE BOOK CARD */
@@ -53,6 +58,10 @@
 /* --- Card Image Section --- */
 .book-card__image-container {
     position: relative; /* Needed to position the discount badge */
+
+    /* --- NEW --- */
+    /* Adds a clean separation line between image and content */
+    border-bottom: 1px solid var(--border-color);
 }
 
 .book-card__image {
@@ -70,7 +79,7 @@
     color: white;
     padding: 5px 10px;
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Slightly refined size */
     font-weight: 600;
     letter-spacing: 0.5px;
 }
@@ -135,7 +144,11 @@
 /* Generic Button Styles */
 .btn {
     display: inline-block;
-    width: 80%;
+
+    /* --- EDITED --- */
+    /* Changed from 80% to 100% to fill the grid columns */
+    width: 100%;
+
     padding: 12px;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -179,42 +192,42 @@
     background-color: #fee2e2;
     border-radius: 8px;
     margin: 0;
-}</style>
+}
+</style>
 
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
-        </div>
+<header>
+    <div class="logo">
+        <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+    </div>
 
-        <nav>
-            <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
-        
-            <div class="nav-divider"></div>
-        
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
-        
-            <div class="nav-divider"></div>
-        
-            <a href="{% url 'buybooks' %}">Buy Books</a>
-            <a href="{% url 'sellbooks' %}">Sell Books</a>
-            <a href="#about">About</a>
-            <a href="{% url 'contact' %}">Contact</a>
-        
-            <div class="nav-divider"></div>
-        
+    <nav>
+        <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
+
+        <div class="nav-divider"></div>
+
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'buybooks' %}">Buy Books</a>
+        <a href="{% url 'sellbooks' %}">Sell Books</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="#about">About</a>
+
+        <div class="nav-divider"></div>
+
+        {% if user.is_authenticated %}
             <a href="{% url 'profile' %}">View Profile</a>
             <a href="{% url 'cart' %}">Your Cart</a>
-            <a href="#">Settings</a>
+            <a href="{% url 'order_history' %}">Order History</a>
             <a href="{% url 'logout' %}">Logout</a>
-        </nav>
-        
-        
-        
-    </header>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+</header>
+
+
 
 <h2 style="text-align: center; padding: 20px; margin-top: 120px;">Books Available</h2>
 
@@ -224,7 +237,10 @@
 <div class="book-card">
     <div class="book-card__image-container">
         <img class="book-card__image" src="{{ book.cover_image.url }}" alt="Cover of {{ book.title }}">
-        <span class="book-card__discount-badge">{{ book.discount_percentage }}% OFF</span>
+
+        {% if book.discount_percentage > 0 %}
+            <span class="book-card__discount-badge">{{ book.discount_percentage|floatformat:0 }}% OFF</span>
+        {% endif %}
     </div>
 
     <div class="book-card__content">
@@ -238,8 +254,9 @@
 
     <div class="book-card__actions">
         {% if book.is_in_stock %}
-            <a href="{% url 'OrderItem' book.id %}" class="btn btn--secondary">Add to Cart</a>
-            <a href="#" class="btn btn--primary">Buy Now</a>
+
+            <a href="{% url 'OrderItem' book.id %}" class="btn btn--primary">Add to Cart</a>
+
         {% else %}
             <p class="book-card__stock-status--out">Out of Stock</p>
         {% endif %}
@@ -247,8 +264,6 @@
 </div>
 {% endfor %}
 </div>
-
-
 
 <div class="shop-category-section">
     <h2 class="section-title">Shop by Category</h2>
@@ -349,12 +364,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         const nav = document.querySelector("nav");
         const menuToggle = document.createElement("div");
-    
-        menuToggle.innerHTML = `<span></span><span></span><span></span>`; 
+
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
         menuToggle.classList.add("menu-toggle");
-    
+
         nav.parentNode.insertBefore(menuToggle, nav);
-    
+
         menuToggle.addEventListener("click", function () {
             nav.classList.toggle("active");
             menuToggle.classList.toggle("open");
@@ -372,7 +387,7 @@
         }
     }
 
-    
+
 </script>
 <script>
     function toggleDetails(button) {
@@ -386,6 +401,6 @@
         }
     }
     </script>
-    
+
 </body>
 </html>

@@ -6,21 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Shipping Address - Second Chapter</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <style>
+        /* --- NEW: Added body background for consistency --- */
         body {
-            /* Using a neutral background that works with most themes */
-            background-color: #f7fafc;
+            background-color: #f8f9fa;
         }
 
         .checkout-address-container {
             max-width: 1100px;
-            margin: 40px auto;
+            margin: 200px auto;
             padding: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            /* --- EDITED: Changed font-family for consistency --- */
+            font-family: 'Poppins', sans-serif;
+
             color: #4a5568;
         }
 
@@ -39,6 +42,7 @@
             display: flex;
             gap: 40px;
             flex-wrap: wrap;
+            align-items: flex-start;
         }
 
         .checkout-address-selection {
@@ -51,7 +55,6 @@
             min-width: 300px;
         }
 
-        /* Using a unique class for the heading to avoid conflicts */
         .checkout-address-subheading {
             font-size: 1.25rem;
             color: #2d3748;
@@ -109,12 +112,15 @@
             display: none;
         }
 
+        /* --- EDITED: Custom Radio Button Alignment --- */
         .checkout-address-card::before {
             content: '';
             position: absolute;
             left: 20px;
-            top: 45%;
-            transform: translateY(-50%);
+
+            /* Changed from top: 45% to a fixed value */
+            top: 24px;
+
             width: 20px;
             height: 20px;
             border: 2px solid #cbd5e0;
@@ -123,12 +129,16 @@
             transition: all 0.2s ease;
         }
 
+        /* --- EDITED: Custom Radio Button Alignment --- */
         .checkout-address-card::after {
             content: '';
             position: absolute;
+
+            /* Changed from left: 25px, top: 45% ... */
             left: 25px;
-            top: 45%;
-            transform: translateY(-50%) scale(0);
+            top: 29px;
+            transform: scale(0); /* Removed translateY */
+
             width: 10px;
             height: 10px;
             border-radius: 50%;
@@ -146,8 +156,9 @@
             border-color: #3182CE;
         }
 
+        /* --- EDITED: Custom Radio Button Alignment --- */
         .checkout-address-container input[type="radio"]:checked + .checkout-address-card-label .checkout-address-card::after {
-            transform: translateY(-50%) scale(1);
+            transform: scale(1); /* Removed translateY */
         }
 
         .checkout-address-form-group {
@@ -171,7 +182,7 @@
             background-color: #fff;
             font-size: 1rem;
             transition: border-color 0.2s, box-shadow 0.2s;
-            box-sizing: border-box;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
         }
 
         .checkout-address-form-group input:focus,
@@ -191,10 +202,12 @@
             padding: 15px 20px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 90px;
         }
 
         .checkout-address-accordion-toggle:hover {
             background-color: #fdfdfe;
+            border-color: #cbd5e0;
         }
 
         .checkout-address-accordion-toggle span {
@@ -269,11 +282,37 @@
 </head>
 <body>
 
-    <header style="border-bottom: 1px solid #e2e8f0; padding: 15px 30px; background-color: #fff;">
-        <div class="logo">
-            <a href="{% url 'home' %}"><img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo" style="height: 40px;"></a>
-        </div>
-    </header>
+    <header>
+    <div class="logo">
+        <img src="{% static 'assets/img/logo.png' %}" alt="Second Chapter Logo">
+    </div>
+
+    <nav>
+        <a href="{% url 'home' %}" style="text-decoration: none;">⬅ Back</a>
+
+        <div class="nav-divider"></div>
+
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'buybooks' %}">Buy Books</a>
+        <a href="{% url 'sellbooks' %}">Sell Books</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="#about">About</a>
+
+        <div class="nav-divider"></div>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'cart' %}">Your Cart</a>
+            <a href="{% url 'order_history' %}">Order History</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+</header>
+
+
 
     <div class="checkout-address-container">
         <div class="checkout-address-header">
@@ -289,7 +328,7 @@
                     <h4 class="checkout-address-subheading">Your Saved Addresses</h4>
                     {% if addresses %}
                         {% for address in addresses %}
-                            <input type="radio" name="selected_address" id="address{{ address.id }}" value="{{ address.id }}">
+                            <input type="radio" name="selected_address" id="address{{ address.id }}" value="{{ address.id }}" {% if forloop.first %}checked{% endif %}>
                             <label for="address{{ address.id }}" class="checkout-address-card-label">
                                 <div class="checkout-address-card">
                                     <div class="checkout-address-card-content">
@@ -316,27 +355,27 @@
                         <div class="checkout-address-accordion-content">
                             <div class="checkout-address-form-group">
                                 <label for="full_name">Full Name</label>
-                                <input type="text" id="full_name" name="full_name">
+                                <input type="text" id="full_name" name="full_name" required>
                             </div>
                             <div class="checkout-address-form-group">
                                 <label for="phone_number">Phone Number</label>
-                                <input type="text" id="phone_number" name="phone_number">
+                                <input type="text" id="phone_number" name="phone_number" required>
                             </div>
                             <div class="checkout-address-form-group">
                                 <label for="street_address">Street Address</label>
-                                <input type="text" id="street_address" name="street_address">
+                                <input type="text" id="street_address" name="street_address" required>
                             </div>
                              <div class="checkout-address-form-group">
                                 <label for="city">City</label>
-                                <input type="text" id="city" name="city">
+                                <input type="text" id="city" name="city" required>
                             </div>
                              <div class="checkout-address-form-group">
                                 <label for="state">State</label>
-                                <input type="text" id="state" name="state">
+                                <input type="text" id="state" name="state" required>
                             </div>
                              <div class="checkout-address-form-group">
                                 <label for="postal_code">Postal Code</label>
-                                <input type="text" id="postal_code" name="postal_code">
+                                <input type="text" id="postal_code" name="postal_code" required>
                             </div>
                              <div class="checkout-address-form-group">
                                 <label for="landmark">Landmark (Optional)</label>
@@ -361,41 +400,80 @@
         </form>
     </div>
 
-    <footer class="footer">
-        </footer>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Updated selectors to use unique class names
             const accordionToggle = document.querySelector(".checkout-address-accordion-toggle");
             const accordion = document.querySelector(".checkout-address-accordion");
 
             if (accordionToggle && accordion) {
                 accordionToggle.addEventListener("click", function () {
+                    // Toggle the 'active' class on the accordion
                     accordion.classList.toggle("active");
 
+                    // Find the currently selected radio button
                     const selectedRadio = document.querySelector('input[name="selected_address"]:checked');
+
+                    // If an address is selected, deselect it
                     if (selectedRadio) {
                         selectedRadio.checked = false;
                     }
+
+                    // Optional: Make new address fields required only when active
+                    const inputs = accordion.querySelectorAll('.checkout-address-accordion-content input[required], .checkout-address-accordion-content select[required]');
+                    const isActive = accordion.classList.contains('active');
+                    inputs.forEach(input => input.required = isActive);
                 });
             }
 
+            // If there are no addresses, auto-open the "Add New Address" form
             {% if not addresses %}
                 if (accordion) {
                     accordion.classList.add("active");
+                    // Make fields required since this is the only option
+                    const inputs = accordion.querySelectorAll('.checkout-address-accordion-content input, .checkout-address-accordion-content select');
+                    inputs.forEach(input => {
+                        // We only want to add 'required' to inputs that should be, like name, phone, etc.
+                        // The landmark is optional, so we'd check its 'id'.
+                        if (input.id !== 'landmark') {
+                            input.required = true;
+                        }
+                    });
                 }
             {% endif %}
 
+            // Add click listener to all saved address labels
             const addressLabels = document.querySelectorAll('.checkout-address-card-label');
             addressLabels.forEach(label => {
                 label.addEventListener('click', function() {
+                    // If the accordion is open, close it
                     if (accordion && accordion.classList.contains('active')) {
                         accordion.classList.remove('active');
+                        // Make new address fields not required
+                        const inputs = accordion.querySelectorAll('.checkout-address-accordion-content input[required], .checkout-address-accordion-content select[required]');
+                        inputs.forEach(input => input.required = false);
                     }
                 });
             });
         });
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const menuToggle = document.createElement("div");
+
+        menuToggle.innerHTML = `<span></span><span></span><span></span>`;
+        menuToggle.classList.add("menu-toggle");
+
+        nav.parentNode.insertBefore(menuToggle, nav);
+
+        menuToggle.addEventListener("click", function () {
+            nav.classList.toggle("active");
+            menuToggle.classList.toggle("open");
+        });
+    });
+
+</script>
 </body>
 </html>
