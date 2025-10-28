@@ -42,6 +42,8 @@ urlpatterns = [
     path('order-history/', views.order_history, name='order_history'),
     path('payment/success/', views.payment_success, name='payment_success'),
     path('address/edit/<int:address_id>/', views.edit_address, name='edit_address'),
+    path('address/delete/<int:address_id>/', views.delete_address, name='delete_address')
+
 
 
 

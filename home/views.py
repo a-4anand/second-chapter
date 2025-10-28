@@ -145,7 +145,7 @@ def otp_verify_view(request):
 
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
             request.session.pop('otp', None)
             request.session.pop('email', None)
@@ -649,6 +649,16 @@ def edit_address(request, address_id):
         'address': address
     }
     return render(request, 'home/main/edit_address.html', context)
+@login_required
+
+def delete_address(request, address_id):
+    address = get_object_or_404(Address, id=address_id, user=request.user)
+    address.delete()
+    messages.success(request, 'Your address has been deleted successfully!')
+    return redirect('profile')
+
+
+
 
 
 def send_contact_admin_notification(contact_instance):

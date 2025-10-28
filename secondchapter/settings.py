@@ -182,7 +182,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ad3810242@gmail.com'  # Your Gmail address
 EMAIL_HOST_PASSWORD = 'tpjp nmim qnqo vxoa'  # The correct app password
 DEFAULT_FROM_EMAIL = 'AutoWorth Support <ad3810242@gmail.com>'
+# These settings make login seamless
+SOCIALACCOUNT_AUTO_SIGNUP = True       # Automatically sign up the user
+ACCOUNT_USERNAME_REQUIRED = False      # Don't ask for a username
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # Use email for login
+ACCOUNT_EMAIL_REQUIRED = True          # Email is required
+ACCOUNT_UNIQUE_EMAIL = True            # Each email must be unique
 
+# This is the most important part for Google login:
+# We trust Google's email verification.
+ACCOUNT_EMAIL_VERIFICATION = "none"    # Don't send a verification email
 
 load_dotenv()
 
